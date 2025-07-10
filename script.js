@@ -1,7 +1,43 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // --- Variáveis Globais para Dados em Memória (Sessão) ---
+    // Chave para armazenar os posts no sessionStorage
+    const POSTS_STORAGE_KEY = 'site_posts';
+    // Chave para armazenar os downloads no sessionStorage
+    const DOWNLOADS_STORAGE_KEY = 'site_downloads';
+
+    // Variáveis que conterão os dados atuais (em memória/sessão)
+    let currentPosts = [];
+    let currentDownloads = [];
+
     // --- Funções Auxiliares Comuns ---
-    // Função para carregar os dados do JSON
-    async function loadData() {
+
+    // Carrega dados, preferindo sessionStorage, senão do data.json
+    async function initializeData() {
+        // Tenta carregar os posts do sessionStorage
+        const storedPosts = sessionStorage.getItem(POSTS_STORAGE_KEY);
+        if (storedPosts) {
+            currentPosts = JSON.parse(storedPosts);
+        } else {
+            // Se não houver no sessionStorage, carrega do data.json
+            const data = await loadDataFromJson();
+            currentPosts = data.posts;
+            // Salva no sessionStorage para futuras navegações
+            saveDataToSessionStorage();
+        }
+
+        // Tenta carregar os downloads do sessionStorage
+        const storedDownloads = sessionStorage.getItem(DOWNLOADS_STORAGE_KEY);
+        if (storedDownloads) {
+            currentDownloads = JSON.parse(storedDownloads);
+        } else {
+            const data = await loadDataFromJson(); // Já carregado, mas para consistência
+            currentDownloads = data.downloads;
+            saveDataToSessionStorage();
+        }
+    }
+
+    // Carrega dados diretamente do arquivo data.json
+    async function loadDataFromJson() {
         try {
             const response = await fetch('data.json');
             if (!response.ok) {
@@ -10,28 +46,26 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
             return data;
         } catch (error) {
-            console.error('Erro ao carregar os dados:', error);
+            console.error('Erro ao carregar os dados do data.json:', error);
             return { posts: [], downloads: [] };
         }
     }
 
-    // Função para simular o armazenamento local (NÃO É PERSISTENTE ENTRE NAVEGADORES OU APÓS REINÍCIO DO SERVIDOR)
-    let currentPosts = [];
-    let currentDownloads = [];
-
-    async function initializeData() {
-        const data = await loadData();
-        currentPosts = data.posts;
-        currentDownloads = data.downloads;
+    // Salva os dados atuais (currentPosts e currentDownloads) no sessionStorage
+    function saveDataToSessionStorage() {
+        sessionStorage.setItem(POSTS_STORAGE_KEY, JSON.stringify(currentPosts));
+        sessionStorage.setItem(DOWNLOADS_STORAGE_KEY, JSON.stringify(currentDownloads));
     }
 
     // --- Lógica de Autenticação (Simulada) ---
+    const LOGIN_STATUS_KEY = 'isLoggedIn';
+
     function setLoggedIn(isLoggedIn) {
-        sessionStorage.setItem('isLoggedIn', isLoggedIn ? 'true' : 'false');
+        sessionStorage.setItem(LOGIN_STATUS_KEY, isLoggedIn ? 'true' : 'false');
     }
 
     function isLoggedIn() {
-        return sessionStorage.getItem('isLoggedIn') === 'true';
+        return sessionStorage.getItem(LOGIN_STATUS_KEY) === 'true';
     }
 
     // --- Lógica para a Página de Login (login.html) ---
@@ -65,6 +99,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (logoutButton) {
         logoutButton.addEventListener('click', () => {
             setLoggedIn(false);
+            // Limpa os dados do sessionStorage ao fazer logout, para reiniciar ao próximo login
+            sessionStorage.removeItem(POSTS_STORAGE_KEY);
+            sessionStorage.removeItem(DOWNLOADS_STORAGE_KEY);
             alert('Você foi desconectado.');
             window.location.href = 'login.html'; // Redireciona para a página de login
         });
@@ -93,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 postList.innerHTML = '<p>Nenhuma postagem disponível ainda.</p>';
             }
 
-            // Renderizar Downloads
+            // Renderizar Downloads (usando currentDownloads)
             if (currentDownloads && currentDownloads.length > 0) {
                 downloadList.innerHTML = currentDownloads.map(download => `
                     <div class="download-card">
@@ -111,10 +148,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Função global para exibir postagem completa (exemplo simples com alert)
-    window.showFullPost = async (postId) => {
-        // Usa currentPosts que já foi carregado ou carrega se necessário
-        if (currentPosts.length === 0) await initializeData();
-
+    window.showFullPost = (postId) => {
+        // Já usamos currentPosts, então não precisamos carregar de novo
         const post = currentPosts.find(p => p.id === postId);
         if (post) {
             alert(`Conteúdo da Postagem: \n\n${post.title}\n\n${post.content}`);
@@ -184,6 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert('Postagem adicionada (apenas visualmente)!');
             }
 
+            saveDataToSessionStorage(); // Salva as alterações no sessionStorage
             renderAdminPosts();
             postForm.reset();
             document.getElementById('post-id').value = ''; // Limpa o ID de edição
@@ -219,12 +255,9 @@ document.addEventListener('DOMContentLoaded', () => {
     window.deletePost = (id) => {
         if (confirm('Tem certeza que deseja excluir esta postagem (apenas visualmente)?')) {
             currentPosts = currentPosts.filter(p => p.id !== id);
+            saveDataToSessionStorage(); // Salva as alterações no sessionStorage
             renderAdminPosts();
             alert('Postagem excluída (apenas visualmente)!');
         }
     };
-
-    // (Removida a lógica de downloads do admin.html, pois o pedido era editar postagens)
-    // Se você precisar editar os "Downloads" de forma separada no admin,
-    // precisaremos adicionar os campos e a lógica de volta para eles.
 });
