@@ -14,50 +14,39 @@
                 <a href="index.html" class="logo">Painel Admin</a>
                 <ul class="nav-links">
                     <li><a href="index.html">Voltar para o Site</a></li>
+                    <li><button id="logout-btn" class="btn">Sair</button></li>
                 </ul>
             </div>
         </nav>
     </header>
 
     <main class="container admin-container">
-        <h1>Gerenciamento de Conteúdo</h1>
+        <h1>Gerenciamento de Postagens</h1>
 
         <section class="admin-section">
-            <h2>Gerenciar Postagens</h2>
-            <form id="add-post-form" class="admin-form">
-                <input type="hidden" id="edit-post-id">
+            <h2>Adicionar/Editar Postagem</h2>
+            <form id="post-form" class="admin-form">
+                <input type="hidden" id="post-id">
                 <label for="post-title">Título da Postagem:</label>
                 <input type="text" id="post-title" required>
                 <label for="post-thumbnail">URL da Imagem (Thumbnail):</label>
                 <input type="url" id="post-thumbnail" required>
-                <label for="post-content">Conteúdo da Postagem (URL ou Texto):</label>
+                <label for="post-content">Conteúdo da Postagem / Descrição:</label>
                 <textarea id="post-content" rows="5" required></textarea>
-                <button type="submit" class="btn-primary">Adicionar/Atualizar Postagem</button>
+                <label for="post-download-link">Link do Botão de Download (Opcional):</label>
+                <input type="url" id="post-download-link" placeholder="Ex: https://seusite.com/arquivo.pdf">
+                <button type="submit" class="btn-primary">Salvar Postagem</button>
+                <button type="button" class="btn btn-cancel" id="cancel-edit-btn" style="display:none;">Cancelar Edição</button>
             </form>
-
-            <div class="admin-list" id="post-admin-list">
-                <h3>Postagens Atuais:</h3>
-                </div>
         </section>
 
         <hr>
 
         <section class="admin-section">
-            <h2>Gerenciar Downloads</h2>
-            <form id="add-download-form" class="admin-form">
-                <input type="hidden" id="edit-download-id">
-                <label for="download-title">Título do Download:</label>
-                <input type="text" id="download-title" required>
-                <label for="download-link">Link para Download:</label>
-                <input type="url" id="download-link" required>
-                <label for="download-description">Descrição:</label>
-                <textarea id="download-description" rows="3"></textarea>
-                <button type="submit" class="btn-primary">Adicionar/Atualizar Download</button>
-            </form>
-
-            <div class="admin-list" id="download-admin-list">
-                <h3>Downloads Atuais:</h3>
-                </div>
+            <h2>Postagens Atuais</h2>
+            <div class="admin-list" id="post-admin-list">
+                <p>Carregando postagens...</p>
+            </div>
         </section>
     </main>
 

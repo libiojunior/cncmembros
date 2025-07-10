@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // --- Funções Auxiliares Comuns ---
     // Função para carregar os dados do JSON
     async function loadData() {
         try {
@@ -14,21 +15,77 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Função para simular o armazenamento local (NÃO É PERSISTENTE ENTRE NAVEGADORES OU APÓS REINÍCIO DO SERVIDOR)
+    let currentPosts = [];
+    let currentDownloads = [];
+
+    async function initializeData() {
+        const data = await loadData();
+        currentPosts = data.posts;
+        currentDownloads = data.downloads;
+    }
+
+    // --- Lógica de Autenticação (Simulada) ---
+    function setLoggedIn(isLoggedIn) {
+        sessionStorage.setItem('isLoggedIn', isLoggedIn ? 'true' : 'false');
+    }
+
+    function isLoggedIn() {
+        return sessionStorage.getItem('isLoggedIn') === 'true';
+    }
+
+    // --- Lógica para a Página de Login (login.html) ---
+    const loginForm = document.getElementById('login-form');
+    const loginMessage = document.getElementById('login-message');
+
+    if (loginForm) {
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Credenciais de teste fixas (ATENÇÃO: NÃO SEGURO PARA PRODUÇÃO!)
+            const correctUsername = 'admin';
+            const correctPassword = 'senha123';
+
+            if (username === correctUsername && password === correctPassword) {
+                setLoggedIn(true);
+                alert('Login bem-sucedido! Redirecionando para o painel.');
+                window.location.href = 'admin.html'; // Redireciona para o painel
+            } else {
+                loginMessage.textContent = 'Usuário ou senha incorretos.';
+                loginMessage.classList.add('error-message');
+                loginMessage.style.display = 'block';
+            }
+        });
+    }
+
+    // --- Lógica para o Logout ---
+    const logoutButton = document.getElementById('logout-btn');
+    if (logoutButton) {
+        logoutButton.addEventListener('click', () => {
+            setLoggedIn(false);
+            alert('Você foi desconectado.');
+            window.location.href = 'login.html'; // Redireciona para a página de login
+        });
+    }
+
     // --- Lógica para a Página Inicial (index.html) ---
     const postList = document.getElementById('post-list');
     const downloadList = document.getElementById('download-list');
 
     if (postList && downloadList) { // Verifica se estamos na página inicial
-        loadData().then(data => {
+        initializeData().then(() => {
             // Renderizar Postagens
-            if (data.posts && data.posts.length > 0) {
-                postList.innerHTML = data.posts.map(post => `
+            if (currentPosts && currentPosts.length > 0) {
+                postList.innerHTML = currentPosts.map(post => `
                     <div class="post-card">
                         <img src="${post.thumbnail}" alt="${post.title}">
                         <div class="post-content">
                             <h3>${post.title}</h3>
-                            <p>${post.content.substring(0, 100)}...</p>
+                            <p>${post.content.substring(0, 150)}...</p>
                             <a href="#" class="btn" onclick="showFullPost('${post.id}')">Ver Postagem Completa</a>
+                            ${post.downloadLink ? `<a href="${post.downloadLink}" class="btn" download="${post.title.replace(/\s/g, '-')}-download" target="_blank">Download</a>` : ''}
                         </div>
                     </div>
                 `).join('');
@@ -37,8 +94,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Renderizar Downloads
-            if (data.downloads && data.downloads.length > 0) {
-                downloadList.innerHTML = data.downloads.map(download => `
+            if (currentDownloads && currentDownloads.length > 0) {
+                downloadList.innerHTML = currentDownloads.map(download => `
                     <div class="download-card">
                         <div class="download-content">
                             <h3>${download.title}</h3>
@@ -55,8 +112,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Função global para exibir postagem completa (exemplo simples com alert)
     window.showFullPost = async (postId) => {
-        const data = await loadData();
-        const post = data.posts.find(p => p.id === postId);
+        // Usa currentPosts que já foi carregado ou carrega se necessário
+        if (currentPosts.length === 0) await initializeData();
+
+        const post = currentPosts.find(p => p.id === postId);
         if (post) {
             alert(`Conteúdo da Postagem: \n\n${post.title}\n\n${post.content}`);
             // Em uma aplicação real, você exibiria isso em um modal, nova página, etc.
@@ -67,25 +126,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // --- Lógica para o Painel Administrativo (admin.html) ---
-    const addPostForm = document.getElementById('add-post-form');
+    const postForm = document.getElementById('post-form');
     const postAdminList = document.getElementById('post-admin-list');
-    const addDownloadForm = document.getElementById('add-download-form');
-    const downloadAdminList = document.getElementById('download-admin-list');
+    const cancelEditBtn = document.getElementById('cancel-edit-btn');
 
-    // Funções auxiliares para simular o armazenamento (apenas em memória, não persistente)
-    let currentPosts = [];
-    let currentDownloads = [];
-
-    // Carregar dados iniciais para o admin
-    if (addPostForm || addDownloadForm) { // Verifica se estamos no painel admin
-        loadData().then(data => {
-            currentPosts = data.posts;
-            currentDownloads = data.downloads;
-            renderAdminPosts();
-            renderAdminDownloads();
-        });
+    // Redireciona se não estiver logado ao tentar acessar admin.html
+    if (window.location.pathname.endsWith('admin.html')) {
+        if (!isLoggedIn()) {
+            window.location.href = 'login.html';
+        } else {
+            // Se estiver logado, inicializa e renderiza o painel
+            initializeData().then(() => {
+                renderAdminPosts();
+            });
+        }
     }
 
+    // Renderizar Postagens no Admin
     function renderAdminPosts() {
         if (!postAdminList) return; // Garante que o elemento existe
         if (currentPosts.length === 0) {
@@ -103,49 +160,34 @@ document.addEventListener('DOMContentLoaded', () => {
         `).join('');
     }
 
-    function renderAdminDownloads() {
-        if (!downloadAdminList) return; // Garante que o elemento existe
-        if (currentDownloads.length === 0) {
-            downloadAdminList.innerHTML = '<p>Nenhum download cadastrado.</p>';
-            return;
-        }
-        downloadAdminList.innerHTML = currentDownloads.map(download => `
-            <div class="item-admin-card" data-id="${download.id}">
-                <h4>${download.title}</h4>
-                <div class="admin-actions">
-                    <button class="btn btn-edit" onclick="editDownload('${download.id}')">Editar</button>
-                    <button class="btn btn-delete" onclick="deleteDownload('${download.id}')">Excluir</button>
-                </div>
-            </div>
-        `).join('');
-    }
-
     // Adicionar/Atualizar Postagem
-    if (addPostForm) {
-        addPostForm.addEventListener('submit', (e) => {
+    if (postForm) {
+        postForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const postId = document.getElementById('edit-post-id').value;
+            const postId = document.getElementById('post-id').value;
             const title = document.getElementById('post-title').value;
             const thumbnail = document.getElementById('post-thumbnail').value;
             const content = document.getElementById('post-content').value;
+            const downloadLink = document.getElementById('post-download-link').value;
 
             if (postId) {
                 // Atualizar postagem existente
                 const index = currentPosts.findIndex(p => p.id === postId);
                 if (index !== -1) {
-                    currentPosts[index] = { id: postId, title, thumbnail, content };
+                    currentPosts[index] = { id: postId, title, thumbnail, content, downloadLink };
                 }
                 alert('Postagem atualizada (apenas visualmente)!');
             } else {
                 // Adicionar nova postagem
                 const newId = String(currentPosts.length ? Math.max(...currentPosts.map(p => parseInt(p.id))) + 1 : 1);
-                currentPosts.push({ id: newId, title, thumbnail, content });
+                currentPosts.push({ id: newId, title, thumbnail, content, downloadLink });
                 alert('Postagem adicionada (apenas visualmente)!');
             }
 
             renderAdminPosts();
-            addPostForm.reset();
-            document.getElementById('edit-post-id').value = ''; // Limpa o ID de edição
+            postForm.reset();
+            document.getElementById('post-id').value = ''; // Limpa o ID de edição
+            cancelEditBtn.style.display = 'none'; // Esconde o botão cancelar
         });
     }
 
@@ -153,13 +195,25 @@ document.addEventListener('DOMContentLoaded', () => {
     window.editPost = (id) => {
         const post = currentPosts.find(p => p.id === id);
         if (post) {
-            document.getElementById('edit-post-id').value = post.id;
+            document.getElementById('post-id').value = post.id;
             document.getElementById('post-title').value = post.title;
             document.getElementById('post-thumbnail').value = post.thumbnail;
             document.getElementById('post-content').value = post.content;
+            document.getElementById('post-download-link').value = post.downloadLink || ''; // Garante que não seja 'undefined'
+            cancelEditBtn.style.display = 'inline-block'; // Mostra o botão cancelar
             alert('Formulário preenchido para edição. Salve para aplicar (apenas visualmente)!');
         }
     };
+
+    // Cancelar Edição
+    if (cancelEditBtn) {
+        cancelEditBtn.addEventListener('click', () => {
+            postForm.reset();
+            document.getElementById('post-id').value = '';
+            cancelEditBtn.style.display = 'none';
+            alert('Edição cancelada.');
+        });
+    }
 
     // Excluir Postagem (apenas visualmente)
     window.deletePost = (id) => {
@@ -170,53 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Adicionar/Atualizar Download
-    if (addDownloadForm) {
-        addDownloadForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const downloadId = document.getElementById('edit-download-id').value;
-            const title = document.getElementById('download-title').value;
-            const link = document.getElementById('download-link').value;
-            const description = document.getElementById('download-description').value;
-
-            if (downloadId) {
-                // Atualizar download existente
-                const index = currentDownloads.findIndex(d => d.id === downloadId);
-                if (index !== -1) {
-                    currentDownloads[index] = { id: downloadId, title, link, description };
-                }
-                alert('Download atualizado (apenas visualmente)!');
-            } else {
-                // Adicionar novo download
-                const newId = String(currentDownloads.length ? Math.max(...currentDownloads.map(d => parseInt(d.id))) + 1 : 1);
-                currentDownloads.push({ id: newId, title, link, description });
-                alert('Download adicionado (apenas visualmente)!');
-            }
-
-            renderAdminDownloads();
-            addDownloadForm.reset();
-            document.getElementById('edit-download-id').value = ''; // Limpa o ID de edição
-        });
-    }
-
-    // Editar Download (apenas preenche o formulário)
-    window.editDownload = (id) => {
-        const download = currentDownloads.find(d => d.id === id);
-        if (download) {
-            document.getElementById('edit-download-id').value = download.id;
-            document.getElementById('download-title').value = download.title;
-            document.getElementById('download-link').value = download.link;
-            document.getElementById('download-description').value = download.description;
-            alert('Formulário preenchido para edição. Salve para aplicar (apenas visualmente)!');
-        }
-    };
-
-    // Excluir Download (apenas visualmente)
-    window.deleteDownload = (id) => {
-        if (confirm('Tem certeza que deseja excluir este download (apenas visualmente)?')) {
-            currentDownloads = currentDownloads.filter(d => d.id !== id);
-            renderAdminDownloads();
-            alert('Download excluído (apenas visualmente)!');
-        }
-    };
+    // (Removida a lógica de downloads do admin.html, pois o pedido era editar postagens)
+    // Se você precisar editar os "Downloads" de forma separada no admin,
+    // precisaremos adicionar os campos e a lógica de volta para eles.
 });

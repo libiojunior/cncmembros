@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Administrativo</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text x='0' y='14' font-size='16'>🔑</text></svg>" type="image/svg+xml">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="container">
+                <a href="index.html" class="logo">Login Admin</a>
+                <ul class="nav-links">
+                    <li><a href="index.html">Voltar para o Site</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container admin-container">
+        <h1>Acesso Administrativo</h1>
+        <section class="admin-section">
+            <form id="login-form" class="admin-form">
+                <label for="username">Usuário:</label>
+                <input type="text" id="username" required>
+                <label for="password">Senha:</label>
+                <input type="password" id="password" required>
+                <button type="submit" class="btn-primary">Entrar</button>
+            </form>
+            <p id="login-message" class="error-message"></p>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Meu Site. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

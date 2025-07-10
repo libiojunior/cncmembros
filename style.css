@@ -8,6 +8,10 @@
     --card-bg: #34495e; /* Um cinza um pouco mais claro para os cards */
     --button-hover: #2980b9;
     --border-color: #5d6d7e;
+    --cancel-button: #95a5a6; /* Cinza para cancelar */
+    --cancel-button-hover: #7f8c8d;
+    --success-color: #27ae60; /* Verde para sucesso */
+    --error-color: #e74c3c; /* Vermelho para erro */
 }
 
 /* Reset básico e tipografia */
@@ -35,7 +39,7 @@ body {
 
 /* Cabeçalho e Navegação */
 header {
-    background-color: var(--card-bg); /* Um tom um pouco diferente para o cabeçalho */
+    background-color: var(--card-bg); /* Um tone um pouco diferente para o cabeçalho */
     padding: 1rem 0;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
@@ -56,21 +60,28 @@ header {
 .nav-links {
     list-style: none;
     display: flex;
+    align-items: center; /* Alinha verticalmente os itens do menu */
 }
 
 .nav-links li {
     margin-left: 25px;
 }
 
-.nav-links a {
+.nav-links a, .nav-links button.btn { /* Aplicar estilo de link também para o botão de sair */
     color: var(--white);
     text-decoration: none;
     font-weight: bold;
-    transition: color 0.3s ease;
+    transition: color 0.3s ease, background-color 0.3s ease;
+    padding: 8px 15px; /* Adicionar padding para o botão parecer mais um item de menu */
+    border-radius: 5px;
+    background-color: transparent; /* Remove o fundo padrão do botão */
+    border: none; /* Remove a borda padrão do botão */
+    cursor: pointer;
 }
 
-.nav-links a:hover {
+.nav-links a:hover, .nav-links button.btn:hover {
     color: var(--light-blue);
+    background-color: rgba(255, 255, 255, 0.1); /* Um leve destaque no hover */
 }
 
 /* Seções Principais */
@@ -195,6 +206,14 @@ h2 {
 .btn-edit:hover { background-color: #e67e22; }
 .btn-delete:hover { background-color: #c0392b; }
 
+.btn-cancel {
+    background-color: var(--cancel-button);
+    margin-top: 10px; /* Espaço entre o botão salvar e cancelar */
+}
+.btn-cancel:hover {
+    background-color: var(--cancel-button-hover);
+}
+
 
 /* Rodapé */
 footer {
@@ -249,6 +268,19 @@ footer {
     padding: 15px;
     font-size: 1.1rem;
 }
+/* Estilo para ter 2 botões na mesma linha */
+.admin-form button + button { /* Aplica estilo apenas se houver outro botão antes dele */
+    margin-top: 0; /* Remove a margem superior padrão do botão */
+    margin-left: 10px; /* Adiciona espaçamento entre os botões */
+    width: auto; /* Permite que o botão se ajuste ao conteúdo */
+    flex-grow: 1; /* Permite que o botão cresça para ocupar espaço */
+}
+.admin-form div.form-actions {
+    display: flex;
+    gap: 10px; /* Espaçamento entre os botões */
+    margin-top: 20px;
+}
+
 
 .admin-list .item-admin-card {
     background-color: var(--card-bg);
@@ -282,6 +314,26 @@ hr {
     margin: 40px 0;
 }
 
+/* Mensagens */
+.message {
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.success-message {
+    background-color: var(--success-color);
+    color: var(--white);
+}
+
+.error-message {
+    background-color: var(--error-color);
+    color: var(--white);
+}
+
+
 /* Responsividade Básica */
 @media (max-width: 768px) {
     .navbar {
@@ -310,9 +362,16 @@ hr {
     .post-grid, .download-grid, .admin-list {
         grid-template-columns: 1fr;
     }
-    
+
     .admin-list .item-admin-card {
         flex-direction: column;
         align-items: flex-start;
+    }
+    .admin-form button {
+        width: 100%;
+        margin-left: 0;
+    }
+    .admin-form div.form-actions {
+        flex-direction: column;
     }
 }

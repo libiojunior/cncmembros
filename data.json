@@ -4,13 +4,15 @@
             "id": "1",
             "title": "Primeira Postagem Incrível",
             "thumbnail": "images/thumbnail-exemplo.jpg",
-            "content": "Conteúdo completo da primeira postagem. Aqui você pode escrever sobre qualquer coisa que desejar! Pode ser um texto longo, ou até mesmo um link para uma página externa com o conteúdo."
+            "content": "Conteúdo completo da primeira postagem. Aqui você pode escrever sobre qualquer coisa que desejar! Pode ser um texto longo, ou até mesmo um link para uma página externa com o conteúdo.",
+            "downloadLink": "https://example.com/meu-primeiro-arquivo.pdf"
         },
         {
             "id": "2",
             "title": "Novidades do Mundo Tech",
             "thumbnail": "https://via.placeholder.com/400x200/3498db/FFFFFF?text=TechNews",
-            "content": "Fique por dentro das últimas tendências e inovações no mundo da tecnologia. De inteligência artificial a realidade virtual, cobrimos tudo!"
+            "content": "Fique por dentro das últimas tendências e inovações no mundo da tecnologia. De inteligência artificial a realidade virtual, cobrimos tudo!",
+            "downloadLink": ""
         }
     ],
     "downloads": [
