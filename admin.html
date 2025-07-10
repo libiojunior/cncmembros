@@ -6,6 +6,8 @@
     <title>Painel Administrativo</title>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text x='0' y='14' font-size='16'>⚙️</text></svg>" type="image/svg+xml">
+    
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 </head>
 <body>
     <header>
@@ -31,12 +33,18 @@
                 <input type="text" id="post-title" required>
                 <label for="post-thumbnail">URL da Imagem (Thumbnail):</label>
                 <input type="url" id="post-thumbnail" required>
-                <label for="post-content">Conteúdo da Postagem / Descrição:</label>
-                <textarea id="post-content" rows="5" required></textarea>
+                
+                <label for="editor">Conteúdo da Postagem / Descrição:</label>
+                <div id="editor"></div>
+                <input type="hidden" id="post-content-html">
+
                 <label for="post-download-link">Link do Botão de Download (Opcional):</label>
                 <input type="url" id="post-download-link" placeholder="Ex: https://seusite.com/arquivo.pdf">
-                <button type="submit" class="btn-primary">Salvar Postagem</button>
-                <button type="button" class="btn btn-cancel" id="cancel-edit-btn" style="display:none;">Cancelar Edição</button>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Salvar Postagem</button>
+                    <button type="button" class="btn btn-cancel" id="cancel-edit-btn" style="display:none;">Cancelar Edição</button>
+                </div>
             </form>
         </section>
 
@@ -56,6 +64,7 @@
         </div>
     </footer>
 
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

@@ -246,8 +246,7 @@ footer {
 }
 
 .admin-form input[type="text"],
-.admin-form input[type="url"],
-.admin-form textarea {
+.admin-form input[type="url"] { /* Removi textarea daqui */
     width: 100%;
     padding: 12px;
     margin-bottom: 20px;
@@ -258,9 +257,35 @@ footer {
     font-size: 1rem;
 }
 
-.admin-form input::placeholder,
-.admin-form textarea::placeholder {
+.admin-form input::placeholder {
     color: #bdc3c7;
+}
+
+/* Estilos para o Quill Editor */
+#editor {
+    background-color: var(--dark-gray);
+    color: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    margin-bottom: 20px;
+    min-height: 200px; /* Altura mínima para o editor */
+}
+.ql-toolbar.ql-snow {
+    background-color: var(--card-bg);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom: 1px solid var(--border-color);
+}
+.ql-container.ql-snow {
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border: none; /* Remove a borda padrão do container Quill */
+}
+.ql-editor {
+    min-height: 150px;
+    max-height: 400px; /* Altura máxima para o editor com scroll */
+    overflow-y: auto;
+    color: var(--white);
 }
 
 .admin-form button {
