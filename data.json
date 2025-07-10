@@ -1,0 +1,30 @@
+{
+    "posts": [
+        {
+            "id": "1",
+            "title": "Primeira Postagem Incrível",
+            "thumbnail": "images/thumbnail-exemplo.jpg",
+            "content": "Conteúdo completo da primeira postagem. Aqui você pode escrever sobre qualquer coisa que desejar! Pode ser um texto longo, ou até mesmo um link para uma página externa com o conteúdo."
+        },
+        {
+            "id": "2",
+            "title": "Novidades do Mundo Tech",
+            "thumbnail": "https://via.placeholder.com/400x200/3498db/FFFFFF?text=TechNews",
+            "content": "Fique por dentro das últimas tendências e inovações no mundo da tecnologia. De inteligência artificial a realidade virtual, cobrimos tudo!"
+        }
+    ],
+    "downloads": [
+        {
+            "id": "1",
+            "title": "Ebook Gratuito: Guia de HTML/CSS",
+            "link": "https://www.w3.org/Style/CSS/learning.html",
+            "description": "Baixe nosso guia completo para iniciantes em HTML e CSS e comece a criar suas próprias páginas web."
+        },
+        {
+            "id": "2",
+            "title": "Planilha de Produtividade",
+            "link": "https://docs.google.com/spreadsheets/d/12345abcdef/export?format=xlsx",
+            "description": "Uma planilha simples para te ajudar a organizar suas tarefas diárias e aumentar sua produtividade."
+        }
+    ]
+}

@@ -1,0 +1,318 @@
+/* Variáveis de Cores */
+:root {
+    --dark-gray: #2c3e50; /* Cinza escuro */
+    --light-blue: #3498db; /* Azul claro */
+    --white: #ecf0f1; /* Branco */
+    --text-color: var(--white);
+    --bg-color: var(--dark-gray);
+    --card-bg: #34495e; /* Um cinza um pouco mais claro para os cards */
+    --button-hover: #2980b9;
+    --border-color: #5d6d7e;
+}
+
+/* Reset básico e tipografia */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Cabeçalho e Navegação */
+header {
+    background-color: var(--card-bg); /* Um tom um pouco diferente para o cabeçalho */
+    padding: 1rem 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar .logo {
+    color: var(--light-blue);
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+}
+
+.nav-links li {
+    margin-left: 25px;
+}
+
+.nav-links a {
+    color: var(--white);
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: var(--light-blue);
+}
+
+/* Seções Principais */
+main {
+    flex: 1; /* Garante que o main ocupe o espaço restante */
+    padding: 40px 0;
+}
+
+.hero-section {
+    text-align: center;
+    padding: 60px 20px;
+    background-color: var(--card-bg);
+    margin-bottom: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.hero-section h1 {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    color: var(--light-blue);
+}
+
+.hero-section p {
+    font-size: 1.2rem;
+    color: var(--white);
+}
+
+.posts-section, .downloads-section, .admin-section {
+    margin-bottom: 40px;
+}
+
+h2 {
+    color: var(--light-blue);
+    font-size: 2.2rem;
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid var(--light-blue);
+    padding-bottom: 10px;
+    display: inline-block;
+    width: auto;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Grid de Postagens e Downloads */
+.post-grid, .download-grid, .admin-list {
+    display: grid;
+    gap: 30px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.post-card, .download-card {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.post-card:hover, .download-card:hover {
+    transform: translateY(-5px);
+}
+
+.post-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+}
+
+.post-content, .download-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.post-content h3, .download-content h3 {
+    color: var(--light-blue);
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.post-content p, .download-content p {
+    color: var(--white);
+    margin-bottom: 15px;
+    flex-grow: 1;
+}
+
+/* Botões */
+.btn {
+    display: inline-block;
+    background-color: var(--light-blue);
+    color: var(--white);
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary:hover, .btn:hover {
+    background-color: var(--button-hover);
+}
+
+/* Botões para o painel administrativo */
+.btn-edit, .btn-delete {
+    background-color: #f39c12; /* Laranja para editar */
+    margin-right: 10px;
+}
+
+.btn-delete {
+    background-color: #e74c3c; /* Vermelho para deletar */
+}
+
+.btn-edit:hover { background-color: #e67e22; }
+.btn-delete:hover { background-color: #c0392b; }
+
+
+/* Rodapé */
+footer {
+    background-color: var(--card-bg);
+    color: var(--white);
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 40px;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilos para o Painel Administrativo */
+.admin-container {
+    padding-top: 40px;
+}
+
+.admin-form {
+    background-color: var(--card-bg);
+    padding: 30px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.admin-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: var(--light-blue);
+}
+
+.admin-form input[type="text"],
+.admin-form input[type="url"],
+.admin-form textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    background-color: var(--dark-gray);
+    color: var(--white);
+    font-size: 1rem;
+}
+
+.admin-form input::placeholder,
+.admin-form textarea::placeholder {
+    color: #bdc3c7;
+}
+
+.admin-form button {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.1rem;
+}
+
+.admin-list .item-admin-card {
+    background-color: var(--card-bg);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; /* Permite quebrar linha em telas menores */
+    gap: 15px;
+}
+
+.admin-list .item-admin-card h4 {
+    color: var(--light-blue);
+    margin: 0;
+    font-size: 1.3rem;
+    flex: 1; /* Ocupa o máximo de espaço possível */
+    min-width: 200px; /* Garante um tamanho mínimo */
+}
+
+.admin-list .item-admin-card .admin-actions {
+    display: flex;
+    gap: 10px;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid var(--border-color);
+    margin: 40px 0;
+}
+
+/* Responsividade Básica */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .nav-links {
+        margin-top: 15px;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .nav-links li {
+        margin: 0;
+    }
+
+    .hero-section h1 {
+        font-size: 2.2rem;
+    }
+
+    .hero-section p {
+        font-size: 1rem;
+    }
+
+    .post-grid, .download-grid, .admin-list {
+        grid-template-columns: 1fr;
+    }
+    
+    .admin-list .item-admin-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
