@@ -1,89 +1,470 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MAXIMUS BARBEARIA</title>
-<style>
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    color: #333;
-    margin: 0;
-    padding: 0;
-}
-header, nav, footer {
-    background-color: #333;
-    color: #FFD700;
-    text-align: center;
-    padding: 10px;
-}
-button, input, select, textarea {
-    background-color: #333;
-    color: #FFD700;
-    border: 1px solid #FFD700;
-    padding: 5px 10px;
-}
-button:hover, input:hover, select:hover, textarea:hover {
-    background-color: #FFD700;
-    color: #333;
-}
-.tab {
-    display: none;
-    padding: 20px;
-}
-.active-tab {
-    display: block;
-}
-nav button {
-    margin: 5px;
-    cursor: pointer;
-}
-.card {
-    border: 1px solid #FFD700;
-    border-radius: 5px;
-    padding: 10px;
-    margin: 10px 0;
-    background-color: #fff;
-    color: #333;
-}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>AppBarber Pro — Preto & Dourado</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0a0a0a;
+      --surface:#141414;
+      --surface-2:#1b1b1b;
+      --text:#f5f5f5;
+      --muted:#c9c9c9;
+      --accent:#C9A227; /* dourado escuro */
+      --accent-2:#8f7a1a;
+      --danger:#e44;
+      --shadow:0 8px 24px rgba(0,0,0,.35);
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; background:var(--bg); color:var(--text);
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial;
+      -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+    }
+    .container{max-width:900px;margin:0 auto;padding:16px 16px 96px}
+    .appbar{position:sticky;top:0;z-index:20;background:linear-gradient(180deg, rgba(0,0,0,.85), rgba(0,0,0,0));padding:12px 16px 4px;backdrop-filter:blur(6px)}
+    .title{font-size:28px;font-weight:700;letter-spacing:.2px}
+
+    .card{
+      background:linear-gradient(180deg, var(--surface), var(--surface-2));
+      border:1px solid rgba(255,255,255,.05);
+      border-radius:var(--radius);
+      padding:16px; display:flex; gap:14px; align-items:center;
+      box-shadow:var(--shadow);
+      transition:transform .15s ease, border-color .2s ease, box-shadow .2s ease;
+    }
+    .card + .card{margin-top:14px}
+    .card:hover{transform:translateY(-1px); border-color:rgba(201,162,39,.55); box-shadow:0 12px 28px rgba(201,162,39,.12)}
+
+    .icon{
+      width:44px;height:44px; border-radius:12px; display:grid; place-items:center;
+      background: radial-gradient(120% 120% at 30% 20%, rgba(201,162,39,.35), rgba(201,162,39,.05));
+      border:1px solid rgba(201,162,39,.35);
+      flex:0 0 auto;
+    }
+    .icon .material-icons-outlined{color:var(--accent)}
+    .card h3{margin:0;font-size:18px}
+    .card p{margin:4px 0 0;color:var(--muted);font-size:14px;line-height:1.25}
+    .chev{margin-left:auto;color:var(--muted)}
+
+    .pill{display:inline-flex;gap:8px;align-items:center;padding:8px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.08);background:var(--surface-2)}
+    .pill .dot{width:8px;height:8px;border-radius:50%;background:var(--accent)}
+
+    .safe{position:fixed;inset:auto 0 74px 0;display:flex;justify-content:center;pointer-events:none}
+    .safe .badge{pointer-events:auto}
+
+    /* Bottom Nav */
+    .bottom-nav{
+      position:fixed;left:0;right:0;bottom:0;background:rgba(10,10,10,.95);
+      border-top:1px solid rgba(255,255,255,.06);backdrop-filter:blur(8px);
+      display:flex;justify-content:space-around;align-items:center;height:66px;padding:8px 6px;z-index:40
+    }
+    .fab{
+      position:absolute;left:50%;transform:translateX(-50%) translateY(-18px);bottom:66px;
+      width:68px;height:68px;border-radius:999px;background:linear-gradient(180deg, #E7C86A, #BE9E25);
+      color:#111;display:grid;place-items:center;box-shadow:0 12px 24px rgba(201,162,39,.35);
+      border:2px solid rgba(255,255,255,.2);
+    }
+    .nav-item{display:flex;flex-direction:column;align-items:center;font-size:12px;color:var(--muted);gap:4px;text-decoration:none}
+    .nav-item.active{color:var(--accent)}
+
+    .version{opacity:.6;font-size:13px;margin-top:20px}
+
+    /* Views */
+    .view{display:none;min-height:100%}
+    .view.active{display:block}
+
+    /* Auth */
+    .center{min-height:100dvh;display:grid;place-items:center;padding:24px}
+    .panel{
+      width:min(520px, 92vw); background:linear-gradient(180deg, var(--surface), var(--surface-2));
+      border:1px solid rgba(255,255,255,.06); border-radius:22px; padding:22px 18px 18px; box-shadow:var(--shadow)
+    }
+    .panel h2{margin:6px 10px 14px}
+    .field{display:flex;flex-direction:column;margin:12px 10px}
+    .field label{font-size:13px;color:var(--muted);margin-bottom:6px}
+    .input{background:#0f0f0f;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px 14px;color:var(--text);outline:none}
+    .btn{appearance:none;border:none;border-radius:14px;padding:12px 16px;font-weight:600;cursor:pointer}
+    .btn.primary{background:linear-gradient(180deg, #E7C86A, #BE9E25);color:#111}
+    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,.12);color:var(--text)}
+    .row{display:flex;gap:10px;flex-wrap:wrap}
+    .row > *{flex:1}
+
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:10px 8px;border-bottom:1px dashed rgba(255,255,255,.08);font-size:14px}
+    th{text-align:left;color:var(--muted)}
+    .tag{display:inline-block;padding:2px 8px;border-radius:999px;background:rgba(201,162,39,.15);border:1px solid rgba(201,162,39,.35);color:#e7d186;font-size:12px}
+    .danger{color:var(--danger)}
+    .link{color:var(--accent);text-decoration:none}
+    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    @media (max-width:640px){.grid{grid-template-columns:1fr}}
+
+  </style>
 </head>
 <body>
-<header>
-    <h1>MAXIMUS</h1>
-</header>
-<nav>
-    <button onclick="openTab('caixa')">Caixa</button>
-    <button onclick="openTab('comandas')">Comandas</button>
-    <button onclick="openTab('agenda')">Agenda</button>
-    <button onclick="openTab('clientes')">Clientes</button>
-    <button onclick="openTab('menu')">Menu</button>
-</nav>
-<section id="caixa" class="tab active-tab">
-    <h2>Caixa</h2>
-    <div class="card">Serviços e registro de vendas</div>
-</section>
-<section id="comandas" class="tab">
-    <h2>Comandas</h2>
-</section>
-<section id="agenda" class="tab">
-    <h2>Agenda</h2>
-</section>
-<section id="clientes" class="tab">
-    <h2>Clientes</h2>
-</section>
-<section id="menu" class="tab">
-    <h2>Menu</h2>
-</section>
-<footer>
-    <p>© 2025 Barbearia</p>
-</footer>
+  <!-- LOGIN / REGISTER VIEW -->
+  <section id="view-login" class="view active center">
+    <div class="panel">
+      <div class="pill" style="margin:6px 10px 2px 10px"><span class="dot"></span><span>AppBarber Pro • Preto & Dourado</span></div>
+      <h2>Entrar no sistema</h2>
+      <form id="loginForm">
+        <div class="field">
+          <label for="email">E-mail</label>
+          <input id="email" class="input" type="email" placeholder="admin@app.com" required>
+        </div>
+        <div class="field">
+          <label for="password">Senha</label>
+          <input id="password" class="input" type="password" placeholder="••••••" required>
+        </div>
+        <div class="row" style="margin:6px 10px 8px">
+          <button class="btn primary" type="submit">Entrar</button>
+          <button class="btn ghost" type="button" id="btnShowRegister">Criar conta</button>
+        </div>
+        <p style="margin:8px 10px 0;color:var(--muted);font-size:13px">Usuário padrão: <strong>admin@app.com</strong> • Senha: <strong>123456</strong></p>
+      </form>
+      <form id="registerForm" style="display:none;margin-top:10px;border-top:1px solid rgba(255,255,255,.06);padding-top:10px">
+        <h2 style="margin-top:10px">Nova conta</h2>
+        <div class="grid">
+          <div class="field"><label>Nome</label><input id="regName" class="input" required placeholder="Seu nome"></div>
+          <div class="field"><label>E-mail</label><input id="regEmail" class="input" type="email" required placeholder="voce@email.com"></div>
+          <div class="field"><label>Senha</label><input id="regPass" class="input" type="password" required></div>
+          <div class="field"><label>Tipo</label>
+            <select id="regRole" class="input"><option value="user">Usuário</option><option value="admin">Administrador</option></select>
+          </div>
+        </div>
+        <div class="row" style="margin:6px 10px 8px">
+          <button class="btn primary" type="submit">Cadastrar</button>
+          <button class="btn ghost" type="button" id="btnHideRegister">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- APP MENU VIEW (semelhante à imagem) -->
+  <section id="view-menu" class="view">
+    <div class="appbar">
+      <div class="title">Menu</div>
+    </div>
+    <div class="container">
+      <article class="card" data-open="admin">
+        <div class="icon"><span class="material-icons-outlined">open_in_new</span></div>
+        <div>
+          <h3>Web Admin</h3>
+          <p>Acesse o painel administrativo e tenha acesso a todas as funcionalidades</p>
+        </div>
+        <span class="material-icons-outlined chev">chevron_right</span>
+      </article>
+
+      <article class="card" data-open="coupons">
+        <div class="icon"><span class="material-icons-outlined">local_offer</span></div>
+        <div>
+          <h3>Cupom</h3>
+          <p>Compartilhe um cupom de desconto com seus clientes</p>
+        </div>
+        <span class="material-icons-outlined chev">chevron_right</span>
+      </article>
+
+      <article class="card" data-open="help">
+        <div class="icon"><span class="material-icons-outlined">help_outline</span></div>
+        <div>
+          <h3>Ajuda</h3>
+          <p>Central de ajuda e termos de uso</p>
+        </div>
+        <span class="material-icons-outlined chev">chevron_right</span>
+      </article>
+
+      <article class="card" data-open="password">
+        <div class="icon"><span class="material-icons-outlined">lock</span></div>
+        <div>
+          <h3>Senha de acesso</h3>
+          <p>Altere sua senha de acesso</p>
+        </div>
+        <span class="material-icons-outlined chev">chevron_right</span>
+      </article>
+
+      <article class="card" data-open="videos">
+        <div class="icon"><span class="material-icons-outlined">play_circle</span></div>
+        <div>
+          <h3>Vídeos tutoriais</h3>
+          <p>Assista aos vídeos e aproveite o máximo do sistema</p>
+        </div>
+        <span class="material-icons-outlined chev">chevron_right</span>
+      </article>
+
+      <article class="card" data-open="docs">
+        <div class="icon"><span class="material-icons-outlined">description</span></div>
+        <div>
+          <h3>Documentos</h3>
+          <p>Cadastre documentos e registre a assinatura de seu cliente</p>
+        </div>
+        <span class="material-icons-outlined chev">chevron_right</span>
+      </article>
+
+      <div class="version">
+        AppBarber Pro<br>Versão 1.205
+      </div>
+    </div>
+
+    <button class="fab" id="fab">
+      <span class="material-icons-outlined">event</span>
+    </button>
+
+    <nav class="bottom-nav">
+      <a class="nav-item" href="#" data-open="cash"><span class="material-icons-outlined">attach_money</span><span>Caixa</span></a>
+      <a class="nav-item" href="#" data-open="orders"><span class="material-icons-outlined">article</span><span>Comandas</span></a>
+      <a class="nav-item active" href="#" data-open="menu"><span class="material-icons-outlined">calendar_month</span><span>Agenda</span></a>
+      <a class="nav-item" href="#" data-open="clients"><span class="material-icons-outlined">groups</span><span>Clientes</span></a>
+      <a class="nav-item" href="#" data-open="profile"><span class="material-icons-outlined">person</span><span>Menu</span></a>
+    </nav>
+  </section>
+
+  <!-- ADMIN VIEW -->
+  <section id="view-admin" class="view">
+    <div class="appbar"><div class="title">Painel Administrativo</div></div>
+    <div class="container">
+      <div class="row" style="margin:0 0 10px 0">
+        <div class="pill badge"><span class="dot"></span><span id="adminWelcome">Bem-vindo</span></div>
+        <button class="btn ghost" onclick="showView('menu')" style="margin-left:auto">Voltar ao Menu</button>
+        <button class="btn" style="background:#121212;border:1px solid rgba(255,255,255,.12);color:var(--text)" onclick="logout()">Sair</button>
+      </div>
+
+      <div class="panel" style="margin-bottom:16px">
+        <h2>Usuários</h2>
+        <div class="grid">
+          <div class="field"><label>Nome</label><input id="admName" class="input" placeholder="Nome"></div>
+          <div class="field"><label>E-mail</label><input id="admEmail" class="input" type="email" placeholder="email@dominio.com"></div>
+          <div class="field"><label>Senha</label><input id="admPass" class="input" type="password" placeholder="Senha"></div>
+          <div class="field"><label>Perfil</label>
+            <select id="admRole" class="input"><option value="user">Usuário</option><option value="admin">Administrador</option></select>
+          </div>
+        </div>
+        <div class="row" style="margin:8px 10px 0">
+          <button class="btn primary" onclick="adminAddUser()">Adicionar</button>
+          <button class="btn ghost" onclick="seed()">Recriar usuário padrão</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Lista de usuários</h2>
+        <div style="overflow:auto">
+          <table id="userTable">
+            <thead><tr><th>Nome</th><th>E-mail</th><th>Perfil</th><th style="text-align:right">Ações</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:16px">
+        <h2>Temas e Personalização</h2>
+        <div class="row" style="margin:8px 10px 0">
+          <button class="btn primary" onclick="setTheme('gold')">Dourado</button>
+          <button class="btn ghost" onclick="setTheme('amber')">Âmbar</button>
+          <button class="btn ghost" onclick="setTheme('pure')">Alto contraste</button>
+        </div>
+        <p style="color:var(--muted);margin:10px">Todas as mudanças ficam salvas no navegador (localStorage).</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLACEHOLDER VIEWS (Cupom, Ajuda, etc.) -->
+  <section id="view-generic" class="view">
+    <div class="appbar"><div id="genericTitle" class="title">Seção</div></div>
+    <div class="container">
+      <div class="panel">
+        <p style="margin:6px 10px 8px">Esta é uma tela de exemplo para <span class="tag" id="genericTag">seção</span>. Adapte o conteúdo conforme sua necessidade.</p>
+        <button class="btn ghost" onclick="showView('menu')" style="margin:8px 10px">Voltar</button>
+      </div>
+    </div>
+  </section>
+
 <script>
-function openTab(tabId) {
-    document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active-tab'));
-    document.getElementById(tabId).classList.add('active-tab');
+// =============== Utilidades ===============
+const $ = (q)=>document.querySelector(q);
+const $$ = (q)=>Array.from(document.querySelectorAll(q));
+
+const storage = {
+  get(k,def){ try{ return JSON.parse(localStorage.getItem(k)) ?? def }catch{ return def } },
+  set(k,v){ localStorage.setItem(k, JSON.stringify(v)) },
+  del(k){ localStorage.removeItem(k) }
+};
+
+function showView(name){
+  $$('.view').forEach(v=>v.classList.remove('active'));
+  if(name==='menu') $('#view-menu').classList.add('active');
+  else if(name==='admin') $('#view-admin').classList.add('active');
+  else if(name==='login') $('#view-login').classList.add('active');
+  else if(name==='generic') $('#view-generic').classList.add('active');
 }
+
+function toast(msg){
+  alert(msg); // simples, pode trocar por toasts bonitos
+}
+
+// =============== Segurança simples (demo) ===============
+async function sha256(str){
+  const enc = new TextEncoder().encode(str);
+  const buf = await crypto.subtle.digest('SHA-256', enc);
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+function seed(){
+  const users = storage.get('users', []);
+  if(!users.length || !users.find(u=>u.email==='admin@app.com')){
+    sha256('123456').then(hash=>{
+      users.push({name:'Administrador', email:'admin@app.com', pass:hash, role:'admin'});
+      storage.set('users', users);
+      toast('Usuário padrão recriado: admin@app.com / 123456');
+      if($('#userTable')) renderUsers();
+    });
+  }
+}
+
+function currentUser(){ return storage.get('sessionUser', null) }
+
+function logout(){ storage.del('sessionUser'); showView('login') }
+
+async function login(email, pass){
+  const users = storage.get('users', []);
+  const hash = await sha256(pass);
+  const user = users.find(u=>u.email===email && u.pass===hash);
+  if(!user) return false;
+  storage.set('sessionUser', {email:user.email, name:user.name, role:user.role});
+  return true;
+}
+
+function requireAuth(){
+  const user = currentUser();
+  if(!user){ showView('login'); return false }
+  return true;
+}
+
+// =============== Admin ===============
+function renderUsers(){
+  const tbody = $('#userTable tbody'); if(!tbody) return;
+  const users = storage.get('users', []);
+  tbody.innerHTML = users.map((u,i)=>`
+    <tr>
+      <td>${u.name}</td>
+      <td>${u.email}</td>
+      <td><span class="tag">${u.role}</span></td>
+      <td style="text-align:right">
+        <a href="#" class="link" onclick="resetPass(${i})">Redefinir</a>
+        &nbsp;|&nbsp;
+        <a href="#" class="danger link" onclick="removeUser(${i})">Remover</a>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function adminAddUser(){
+  const name=$('#admName').value.trim();
+  const email=$('#admEmail').value.trim();
+  const pass=$('#admPass').value; const role=$('#admRole').value;
+  if(!name||!email||!pass) return toast('Preencha todos os campos.');
+  const users = storage.get('users', []);
+  if(users.find(u=>u.email===email)) return toast('E-mail já cadastrado.');
+  sha256(pass).then(hash=>{
+    users.push({name,email,pass:hash,role});
+    storage.set('users', users);
+    renderUsers();
+    $('#admName').value=$('#admEmail').value=$('#admPass').value='';
+    toast('Usuário adicionado!');
+  });
+}
+
+function removeUser(i){
+  const users = storage.get('users', []);
+  users.splice(i,1); storage.set('users', users); renderUsers();
+}
+function resetPass(i){
+  const nova = prompt('Nova senha:'); if(!nova) return;
+  sha256(nova).then(hash=>{
+    const users = storage.get('users', []); users[i].pass = hash; storage.set('users', users); toast('Senha atualizada!');
+  });
+}
+
+// =============== Temas ===============
+function setTheme(t){
+  const root = document.documentElement.style;
+  if(t==='pure'){
+    root.setProperty('--accent','#ffd60a');
+    root.setProperty('--accent-2','#b39400');
+  } else if(t==='amber'){
+    root.setProperty('--accent','#ffb000');
+    root.setProperty('--accent-2','#b37700');
+  } else { // gold
+    root.setProperty('--accent','#C9A227');
+    root.setProperty('--accent-2','#8f7a1a');
+  }
+  storage.set('theme', t);
+}
+
+function loadTheme(){
+  const t = storage.get('theme', 'gold'); setTheme(t);
+}
+
+// =============== Navegação interna ===============
+function openSection(key){
+  if(key==='admin'){
+    const user=currentUser();
+    if(!user || user.role!=='admin') return toast('Apenas administradores podem acessar o Web Admin.');
+    $('#adminWelcome').textContent = `Bem-vindo, ${user.name}`;
+    renderUsers();
+    showView('admin');
+  } else {
+    $('#genericTitle').textContent = {
+      coupons:'Cupom', help:'Ajuda', password:'Senha de acesso', videos:'Vídeos tutoriais', docs:'Documentos', cash:'Caixa', orders:'Comandas', clients:'Clientes', profile:'Menu', menu:'Agenda'
+    }[key]||'Seção';
+    $('#genericTag').textContent = key;
+    showView('generic');
+  }
+}
+
+// =============== Eventos ===============
+window.addEventListener('DOMContentLoaded', ()=>{
+  loadTheme();
+  seed();
+
+  // Sessão
+  if(currentUser()) showView('menu');
+
+  // Login
+  $('#loginForm').addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const ok = await login($('#email').value.trim(), $('#password').value);
+    if(ok){ showView('menu'); $('#email').value=''; $('#password').value=''; }
+    else toast('Credenciais inválidas.');
+  });
+
+  // Toggle cadastro
+  $('#btnShowRegister').addEventListener('click',()=>{ $('#registerForm').style.display='block' })
+  $('#btnHideRegister').addEventListener('click',()=>{ $('#registerForm').style.display='none' })
+  
+  $('#registerForm').addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const name=$('#regName').value.trim();
+    const email=$('#regEmail').value.trim();
+    const pass=$('#regPass').value; const role=$('#regRole').value;
+    if(!name||!email||!pass) return toast('Preencha todos os campos.');
+    const users = storage.get('users', []);
+    if(users.find(u=>u.email===email)) return toast('E-mail já cadastrado.');
+    const hash = await sha256(pass);
+    users.push({name,email,pass:hash,role}); storage.set('users', users);
+    toast('Conta criada. Você já pode entrar.');
+    $('#registerForm').reset(); $('#registerForm').style.display='none';
+  });
+
+  // Cards & nav
+  $$('#view-menu [data-open]').forEach(el=>{
+    el.addEventListener('click',()=>openSection(el.getAttribute('data-open')));
+  });
+  $('#fab').addEventListener('click',()=>openSection('menu'));
+});
 </script>
 </body>
 </html>
