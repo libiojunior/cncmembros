@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AppBarber Pro — Demo HTML</title>
+  <meta name="theme-color" content="#0ea5e9">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0b0f17; --card:#121826; --muted:#8ea1b4; --text:#e6f0ff; --accent:#00e1ff; --accent2:#8b5cf6; --ok:#22c55e; --warn:#f59e0b; --err:#ef4444;
+      --radius:18px; --shadow:0 10px 30px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,255,255,.04);
+    }
+    *{box-sizing:border-box} html,body{height:100%}
+    body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(120deg,#0b0f17,#111827 60%,#0b0f17);color:var(--text)}
+    a{color:var(--accent)}
+    .app{display:flex;flex-direction:column;min-height:100vh}
+    header{position:sticky;top:0;z-index:5;background:rgba(11,15,23,.75);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.06)}
+    .topbar{display:flex;align-items:center;gap:12px;padding:14px 16px}
+    .logo{font-weight:800;letter-spacing:.3px}
+    .chip{padding:4px 10px;border-radius:999px;background:linear-gradient(90deg,rgba(0,225,255,.25),rgba(139,92,246,.25));border:1px solid rgba(255,255,255,.12);font-size:12px}
+    .grow{flex:1}
+    .avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#2dd4bf,#8b5cf6);box-shadow:0 0 0 2px rgba(255,255,255,.08)}
+
+    main{flex:1;padding:16px;max-width:1000px;margin:0 auto;width:100%}
+    .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+    .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;position:relative;overflow:hidden}
+    .card h3{margin:0 0 6px;font-size:16px}
+    .muted{color:var(--muted);font-size:13px}
+    .pill{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,rgba(0,225,255,.15),rgba(139,92,246,.15));border:1px solid rgba(255,255,255,.06);margin-right:10px}
+    .row{display:flex;align-items:center}
+
+    .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 16px}
+    .btn{appearance:none;border:0;outline:0;cursor:pointer;padding:10px 14px;border-radius:14px;background:linear-gradient(180deg,#172033,#0f172a);box-shadow:var(--shadow);color:var(--text);font-weight:600}
+    .btn[disabled]{opacity:.5;cursor:not-allowed}
+    .btn.primary{background:linear-gradient(180deg,#00e1ff,#008bff);color:#031521;text-shadow:0 1px 0 rgba(255,255,255,.25)}
+    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,.1)}
+    .btn.danger{background:linear-gradient(180deg,#ef4444,#b91c1c)}
+
+    input,select,textarea{width:100%;padding:12px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:#0f172a;color:var(--text);box-shadow:inset 0 0 0 1px rgba(255,255,255,.04)}
+    label{font-size:13px;color:var(--muted);display:block;margin:6px 2px}
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
+    .col-6{grid-column:span 6} .col-4{grid-column:span 4} .col-8{grid-column:span 8} .col-12{grid-column:span 12}
+    @media (max-width:780px){.col-6,.col-4,.col-8{grid-column:span 12}}
+
+    /* Tabs bottom nav */
+    nav{position:sticky;bottom:0;background:rgba(11,15,23,.85);backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.08);display:grid;grid-template-columns:repeat(5,1fr)}
+    nav button{background:transparent;border:0;color:var(--muted);font-weight:600;padding:12px 6px;display:grid;place-items:center;gap:4px}
+    nav button.active{color:var(--text)}
+    nav svg{width:22px;height:22px}
+
+    .section{display:none;animation:fade .2s ease}
+    .section.active{display:block}
+    @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+    /* Tables */
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:10px;border-bottom:1px dashed rgba(255,255,255,.06);text-align:left}
+    th{color:var(--muted);font-weight:600}
+
+    .tag{font-size:11px;padding:3px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.14);color:var(--text)}
+    .tag.ok{border-color:rgba(34,197,94,.6)}
+    .tag.warn{border-color:rgba(245,158,11,.6)}
+
+    /* Login */
+    .gate{min-height:100vh;display:grid;place-items:center;padding:28px}
+    .panel{width:min(520px,100%);background:var(--card);border-radius:22px;box-shadow:var(--shadow);padding:22px}
+    .center{text-align:center}
+    .brand{font-size:40px;font-weight:800;letter-spacing:.3px;background:linear-gradient(90deg,#00e1ff,#8b5cf6);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .note{font-size:13px;color:var(--muted)}
+    .mt{margin-top:12px}
+  </style>
+</head>
+<body>
+<div class="app" id="app">
+  <div id="gate" class="gate">
+    <div class="panel">
+      <div class="center">
+        <div class="brand">AppBarber Pro</div>
+        <div class="note">PIN de acesso necessário. Padrão: <b>1234</b></div>
+      </div>
+      <div class="mt">
+        <label for="pin">Digite seu PIN</label>
+        <input id="pin" type="password" inputmode="numeric" placeholder="••••" />
+      </div>
+      <div class="toolbar">
+        <button class="btn primary" id="entrarBtn">Entrar</button>
+        <button class="btn ghost" id="lembrarToggle">Lembrar neste dispositivo</button>
+      </div>
+      <div class="note">Dica: você pode alterar o PIN pelo menu ➜ "Senha de acesso".</div>
+    </div>
+  </div>
+
+  <header id="top" style="display:none">
+    <div class="topbar">
+      <div class="logo">AppBarber <span class="chip">Pro • v1.205</span></div>
+      <div class="grow"></div>
+      <button class="btn ghost" id="installBtn" title="Instalar como app (PWA)">Instalar</button>
+      <div class="avatar"></div>
+    </div>
+  </header>
+
+  <main id="content" style="display:none">
+
+    <!-- CAIXA -->
+    <section id="tab-caixa" class="section active">
+      <div class="cards">
+        <div class="card">
+          <h3>Registrar venda</h3>
+          <div class="grid">
+            <div class="col-6">
+              <label>Serviço</label>
+              <select id="saleService"></select>
+            </div>
+            <div class="col-3">
+              <label>Preço (R$)</label>
+              <input id="salePrice" type="number" min="0" step="0.01" />
+            </div>
+            <div class="col-3">
+              <label>Pagamento</label>
+              <select id="salePay">
+                <option>Dinheiro</option>
+                <option>PIX</option>
+                <option>Débito</option>
+                <option>Crédito</option>
+              </select>
+            </div>
+          </div>
+          <div class="toolbar">
+            <button class="btn primary" id="addSale">Adicionar</button>
+            <button class="btn ghost" id="clearDay">Fechar dia</button>
+          </div>
+          <div class="muted">Use a lista de serviços do Menu ➜ Configurações.</div>
+        </div>
+        <div class="card">
+          <h3>Resumo do dia</h3>
+          <table id="salesTable">
+            <thead><tr><th>Hora</th><th>Serviço</th><th>Pagamento</th><th>Total</th><th></th></tr></thead>
+            <tbody></tbody>
+          </table>
+          <div class="toolbar">
+            <div class="btn ghost">Total: R$ <b id="salesTotal">0,00</b></div>
+            <div class="btn ghost">Itens: <b id="salesCount">0</b></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- COMANDAS -->
+    <section id="tab-comandas" class="section">
+      <div class="cards">
+        <div class="card">
+          <h3>Abrir comanda</h3>
+          <div class="grid">
+            <div class="col-8"><label>Cliente</label><input id="ordName" placeholder="Nome do cliente"></div>
+            <div class="col-4"><label>Nº</label><input id="ordNum" placeholder="0001"></div>
+          </div>
+          <div class="toolbar"><button class="btn primary" id="openOrder">Abrir</button></div>
+        </div>
+        <div class="card">
+          <h3>Em aberto</h3>
+          <table id="ordersTable"><thead><tr><th>Nº</th><th>Cliente</th><th>Status</th><th></th></tr></thead><tbody></tbody></table>
+        </div>
+      </div>
+    </section>
+
+    <!-- AGENDA -->
+    <section id="tab-agenda" class="section">
+      <div class="cards">
+        <div class="card">
+          <h3>Novo agendamento</h3>
+          <div class="grid">
+            <div class="col-6"><label>Cliente</label><input id="schClient" placeholder="Nome"></div>
+            <div class="col-6"><label>Telefone</label><input id="schPhone" placeholder="(11) 90000-0000"></div>
+            <div class="col-6"><label>Serviço</label><select id="schService"></select></div>
+            <div class="col-3"><label>Data</label><input id="schDate" type="date"></div>
+            <div class="col-3"><label>Hora</label><input id="schTime" type="time"></div>
+          </div>
+          <div class="toolbar"><button class="btn primary" id="addSchedule">Adicionar</button></div>
+        </div>
+        <div class="card">
+          <h3>Agenda</h3>
+          <div class="grid">
+            <div class="col-6"><label>Filtrar por data</label><input id="fltDate" type="date"></div>
+            <div class="col-6"><label>Busca</label><input id="fltText" placeholder="cliente/serviço"></div>
+          </div>
+          <table id="schedTable"><thead><tr><th>Data</th><th>Hora</th><th>Cliente</th><th>Serviço</th><th></th></tr></thead><tbody></tbody></table>
+        </div>
+      </div>
+    </section>
+
+    <!-- CLIENTES -->
+    <section id="tab-clientes" class="section">
+      <div class="cards">
+        <div class="card">
+          <h3>Cadastrar cliente</h3>
+          <div class="grid">
+            <div class="col-6"><label>Nome</label><input id="cliName"></div>
+            <div class="col-6"><label>Telefone</label><input id="cliPhone"></div>
+            <div class="col-12"><label>Observações</label><input id="cliNotes" placeholder="Ex: corte preferido, fidelidade, etc."></div>
+          </div>
+          <div class="toolbar"><button class="btn primary" id="addClient">Salvar</button></div>
+        </div>
+        <div class="card">
+          <h3>Lista de clientes</h3>
+          <div class="grid">
+            <div class="col-8"><label>Buscar</label><input id="cliSearch" placeholder="nome ou telefone"></div>
+            <div class="col-4"><label>&nbsp;</label><button class="btn ghost" id="exportClients">Exportar CSV</button></div>
+          </div>
+          <table id="clientsTable"><thead><tr><th>Nome</th><th>Telefone</th><th>Obs</th><th></th></tr></thead><tbody></tbody></table>
+        </div>
+      </div>
+    </section>
+
+    <!-- MENU -->
+    <section id="tab-menu" class="section">
+      <div class="cards" id="menuCards">
+        <div class="card row">
+          <div class="pill" aria-hidden="true">🔗</div>
+          <div>
+            <h3>Web Admin</h3>
+            <div class="muted">Acesse o módulo webadmin e tenha acesso a todas as funcionalidades</div>
+            <div class="toolbar">
+              <input id="webAdminUrl" placeholder="URL do WebAdmin">
+              <a class="btn primary" id="goWebAdmin" target="_blank">Abrir</a>
+            </div>
+          </div>
+        </div>
+        <div class="card row">
+          <div class="pill">🏷️</div>
+          <div>
+            <h3>Cupom</h3>
+            <div class="muted">Compartilhe um cupom de desconto com seus clientes</div>
+            <div class="toolbar">
+              <input id="couponText" placeholder="Ex: BARBA10 - 10% OFF">
+              <button class="btn" id="shareCoupon">Compartilhar</button>
+            </div>
+          </div>
+        </div>
+        <div class="card row">
+          <div class="pill">🛟</div>
+          <div>
+            <h3>Ajuda</h3>
+            <div class="muted">Central de ajuda e termos de uso</div>
+            <div class="toolbar"><a class="btn ghost" href="#" onclick="alert('Envie uma mensagem no WhatsApp (11) 94988-6234 ou consulte o manual anexado.');return false;">Abrir</a></div>
+          </div>
+        </div>
+        <div class="card row">
+          <div class="pill">🔒</div>
+          <div>
+            <h3>Senha de acesso</h3>
+            <div class="muted">Altere sua senha de acesso</div>
+            <div class="grid">
+              <div class="col-6"><label>PIN atual</label><input id="pinOld" type="password"></div>
+              <div class="col-6"><label>Novo PIN</label><input id="pinNew" type="password"></div>
+            </div>
+            <div class="toolbar"><button class="btn" id="chgPin">Alterar</button></div>
+          </div>
+        </div>
+        <div class="card row">
+          <div class="pill">🎬</div>
+          <div>
+            <h3>Vídeos tutoriais</h3>
+            <div class="muted">Assista os vídeos e aproveite o máximo do AppBarber</div>
+            <div class="toolbar"><a class="btn ghost" href="https://www.youtube.com/results?search_query=barbearia+tutorial" target="_blank">Assistir</a></div>
+          </div>
+        </div>
+        <div class="card row">
+          <div class="pill">📄</div>
+          <div>
+            <h3>Documentos</h3>
+            <div class="muted">Cadastre documentos e registre a assinatura de seu cliente</div>
+            <div class="grid">
+              <div class="col-8"><input id="docName" placeholder="Nome do documento"></div>
+              <div class="col-4"><input id="docFile" type="file" accept="application/pdf,image/*"></div>
+            </div>
+            <div class="toolbar"><button class="btn" id="addDoc">Salvar</button> <button class="btn ghost" id="listDocs">Listar</button></div>
+            <div id="docsList" class="muted"></div>
+          </div>
+        </div>
+        <div class="card row">
+          <div class="pill">⚙️</div>
+          <div>
+            <h3>Configurações</h3>
+            <div class="muted">Serviços, preços e preferências</div>
+            <div class="grid">
+              <div class="col-8"><label>Novo serviço</label><input id="svcName" placeholder="Corte"></div>
+              <div class="col-4"><label>Preço</label><input id="svcPrice" type="number" step="0.01" placeholder="30,00"></div>
+            </div>
+            <div class="toolbar"><button class="btn" id="addSvc">Adicionar serviço</button> <button class="btn ghost" id="resetApp">Resetar app</button></div>
+            <div id="svcsWrap" class="muted"></div>
+          </div>
+        </div>
+        <div class="card center">
+          <button class="btn danger" id="logout">Sair</button>
+          <div class="note mt">Versão 1.205 • Single-file HTML demo</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <nav id="tabs" style="display:none">
+    <button data-tab="caixa" class="active">💵<div>Caixa</div></button>
+    <button data-tab="comandas">🧾<div>Comandas</div></button>
+    <button data-tab="agenda">📅<div>Agenda</div></button>
+    <button data-tab="clientes">👥<div>Clientes</div></button>
+    <button data-tab="menu">☰<div>Menu</div></button>
+  </nav>
+</div>
+
+<script>
+(function(){
+  const $ = sel => document.querySelector(sel);
+  const $$ = sel => Array.from(document.querySelectorAll(sel));
+  const S = {
+    pin: 'app.pin', remember: 'app.remember',
+    services: 'app.services', sales: 'app.sales',
+    orders: 'app.orders', clients: 'app.clients',
+    sched: 'app.sched', docs: 'app.docs', web: 'app.web'
+  };
+  const curDayKey = () => 'sales:'+new Date().toISOString().slice(0,10);
+  const money = n => (Number(n)||0).toLocaleString('pt-BR',{minimumFractionDigits:2, maximumFractionDigits:2});
+  const load = (k, d) => JSON.parse(localStorage.getItem(k) || JSON.stringify(d));
+  const save = (k, v) => localStorage.setItem(k, JSON.stringify(v));
+
+  // Seed defaults
+  if(!localStorage.getItem(S.pin)) save(S.pin, '1234');
+  if(!localStorage.getItem(S.services)) save(S.services, [
+    {name:'Corte masculino', price:35},
+    {name:'Barba', price:25},
+    {name:'Corte + Barba', price:55},
+    {name:'Sobrancelha', price:15}
+  ]);
+
+  // Login
+  const gate = $('#gate'); const top = $('#top'); const content = $('#content'); const tabs = $('#tabs');
+  $('#entrarBtn').onclick = () => {
+    const pin = $('#pin').value.trim();
+    if(pin === load(S.pin,'1234')){
+      if($('#lembrarToggle').classList.contains('on')) localStorage.setItem(S.remember, '1');
+      startApp();
+    } else alert('PIN incorreto');
+  };
+  $('#lembrarToggle').onclick = e=>{ e.target.classList.toggle('on'); e.target.textContent = e.target.classList.contains('on')? 'Lembrando...' : 'Lembrar neste dispositivo'; };
+  if(localStorage.getItem(S.remember) === '1') startApp();
+
+  function startApp(){ gate.style.display='none'; top.style.display='block'; content.style.display='block'; tabs.style.display='grid'; initUI(); }
+
+  // Tabs
+  $$('#tabs button').forEach(b=> b.onclick = ()=>{
+    $$('#tabs button').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    $$('.section').forEach(s=> s.classList.remove('active'));
+    $('#tab-'+b.dataset.tab).classList.add('active');
+  });
+
+  // Services population
+  function refreshServices(){
+    const svcs = load(S.services,[]);
+    const selA = $('#saleService'), selB = $('#schService');
+    selA.innerHTML = selB.innerHTML = svcs.map((s,i)=>`<option value="${i}">${s.name}</option>`).join('');
+    $('#svcsWrap').innerHTML = svcs.map((s,i)=>`<div class="mt">• ${s.name} — R$ ${money(s.price)} <button class='btn ghost' data-del-svc='${i}'>remover</button></div>`).join('');
+    $$('#svcsWrap [data-del-svc]').forEach(btn=> btn.onclick = ()=>{ const sv = load(S.services,[]); sv.splice(+btn.dataset.delSvc,1); save(S.services,sv); refreshServices(); });
+    const first = svcs[0]||{price:0}; $('#salePrice').value = first.price;
+  }
+  $('#saleService').onchange = e=>{ const s = load(S.services,[])[+e.target.value]; $('#salePrice').value = s? s.price:0 };
+
+  // Caixa (sales)
+  function refreshSales(){
+    const day = load(curDayKey(),[]);
+    const tb = $('#salesTable tbody'); tb.innerHTML = '';
+    let total=0; day.forEach((it,idx)=>{
+      total+=Number(it.price)||0;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${new Date(it.time).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}</td><td>${it.service}</td><td>${it.pay}</td><td>R$ ${money(it.price)}</td><td><button class='btn ghost' data-del='${idx}'>Excluir</button></td>`;
+      tb.appendChild(tr);
+    });
+    $('#salesTotal').textContent = money(total);
+    $('#salesCount').textContent = day.length;
+    $$('#salesTable [data-del]').forEach(b=> b.onclick = ()=>{ const d=load(curDayKey(),[]); d.splice(+b.dataset.del,1); save(curDayKey(),d); refreshSales(); });
+  }
+  $('#addSale').onclick = ()=>{
+    const svcs = load(S.services,[]);
+    const s = svcs[+$('#saleService').value]||{name:'Personalizado'};
+    const rec = {time:Date.now(), service:s.name, price:Number($('#salePrice').value||0), pay:$('#salePay').value};
+    const day = load(curDayKey(),[]); day.unshift(rec); save(curDayKey(),day); refreshSales(); alert('Venda registrada!');
+  };
+  $('#clearDay').onclick = ()=>{
+    if(confirm('Fechar o dia e limpar as vendas de hoje?')){ localStorage.removeItem(curDayKey()); refreshSales(); }
+  };
+
+  // Comandas
+  function refreshOrders(){
+    const list = load(S.orders,[]);
+    const tb = $('#ordersTable tbody'); tb.innerHTML='';
+    list.forEach((o,i)=>{
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>#${o.num}</td><td>${o.name}</td><td><span class='tag ${o.status==='Aberta'?'warn':'ok'}'>${o.status}</span></td><td><button class='btn ghost' data-close='${i}'>Finalizar</button></td>`;
+      tb.appendChild(tr);
+    });
+    $$('#ordersTable [data-close]').forEach(b=> b.onclick=()=>{ const ls=load(S.orders,[]); if(ls[b.dataset.close]){ls[b.dataset.close].status='Fechada'; save(S.orders,ls); refreshOrders();} });
+  }
+  $('#openOrder').onclick = ()=>{
+    const name=$('#ordName').value.trim(); const num=$('#ordNum').value.trim()||Math.floor(1000+Math.random()*8999);
+    if(!name) return alert('Informe o cliente');
+    const ls = load(S.orders,[]); ls.unshift({name, num, status:'Aberta'}); save(S.orders,ls); $('#ordName').value=''; $('#ordNum').value=''; refreshOrders();
+  };
+
+  // Agenda
+  function refreshSched(){
+    const list = load(S.sched,[]);
+    const q = ($('#fltText').value||'').toLowerCase();
+    const d = $('#fltDate').value;
+    const tb = $('#schedTable tbody'); tb.innerHTML='';
+    list
+      .filter(s=> !d || s.date===d)
+      .filter(s=> s.client.toLowerCase().includes(q) || s.service.toLowerCase().includes(q))
+      .sort((a,b)=> (a.date+a.time).localeCompare(b.date+b.time))
+      .forEach((s,i)=>{
+        const tr=document.createElement('tr');
+        tr.innerHTML = `<td>${s.date.split('-').reverse().join('/')}</td><td>${s.time}</td><td>${s.client}</td><td>${s.service}</td><td><button class='btn ghost' data-del-s='${i}'>Excluir</button></td>`;
+        tb.appendChild(tr);
+      });
+    $$('#schedTable [data-del-s]').forEach(b=> b.onclick=()=>{ const ls=load(S.sched,[]); ls.splice(+b.dataset.delS,1); save(S.sched,ls); refreshSched(); });
+  }
+  $('#addSchedule').onclick = ()=>{
+    const client=$('#schClient').value.trim(); const phone=$('#schPhone').value.trim(); const service=$('#schService').selectedOptions[0]?.text||''; const date=$('#schDate').value; const time=$('#schTime').value;
+    if(!client||!date||!time) return alert('Preencha cliente, data e hora');
+    const ls = load(S.sched,[]); ls.push({client, phone, service, date, time}); save(S.sched,ls); ['#schClient','#schPhone','#schDate','#schTime'].forEach(id=>$(id).value=''); refreshSched();
+  };
+  $('#fltText').oninput = refreshSched; $('#fltDate').onchange = refreshSched;
+
+  // Clientes
+  function refreshClients(){
+    const list = load(S.clients,[]);
+    const q = ($('#cliSearch').value||'').toLowerCase();
+    const tb = $('#clientsTable tbody'); tb.innerHTML='';
+    list.filter(c=> c.name.toLowerCase().includes(q)||c.phone.includes(q)).forEach((c,i)=>{
+      const tr=document.createElement('tr');
+      tr.innerHTML = `<td>${c.name}</td><td>${c.phone}</td><td class='muted'>${c.notes||''}</td><td><button class='btn ghost' data-del-c='${i}'>Excluir</button></td>`;
+      tb.appendChild(tr);
+    });
+    $$('#clientsTable [data-del-c]').forEach(b=> b.onclick=()=>{ const ls=load(S.clients,[]); ls.splice(+b.dataset.delC,1); save(S.clients,ls); refreshClients(); });
+  }
+  $('#addClient').onclick = ()=>{
+    const name=$('#cliName').value.trim(); if(!name) return alert('Nome é obrigatório');
+    const c={name, phone:$('#cliPhone').value.trim(), notes:$('#cliNotes').value.trim()};
+    const ls=load(S.clients,[]); ls.unshift(c); save(S.clients,ls); ['#cliName','#cliPhone','#cliNotes'].forEach(id=>$(id).value=''); refreshClients();
+  };
+  $('#cliSearch').oninput = refreshClients;
+  $('#exportClients').onclick = ()=>{
+    const rows = [['Nome','Telefone','Observações'], ...load(S.clients,[]).map(c=>[c.name,c.phone,c.notes||''])];
+    const csv = rows.map(r=> r.map(v=>`"${String(v).replaceAll('"','""')}"`).join(',')).join('\n');
+    const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'})); a.download='clientes.csv'; a.click();
+  };
+
+  // Menu actions
+  $('#goWebAdmin').onclick = e=>{ const url=$('#webAdminUrl').value.trim(); if(!url){e.preventDefault(); alert('Informe a URL');} else { save(S.web, url); e.target.href = url; } };
+  $('#couponText').value = localStorage.getItem('coupon')||'';
+  $('#shareCoupon').onclick = async ()=>{
+    const text=$('#couponText').value.trim(); if(!text) return alert('Escreva o cupom');
+    localStorage.setItem('coupon', text);
+    if(navigator.share){ try{ await navigator.share({title:'Cupom AppBarber', text}); }catch{} } else { navigator.clipboard.writeText(text); alert('Cupom copiado!'); }
+  };
+  $('#chgPin').onclick = ()=>{ const old=$('#pinOld').value, n=$('#pinNew').value; if(old!==load(S.pin,'')) return alert('PIN atual incorreto'); if((n||'').length<4) return alert('Novo PIN deve ter 4+ dígitos'); save(S.pin,n); $('#pinOld').value=$('#pinNew').value=''; alert('PIN alterado!'); };
+  $('#addDoc').onclick = ()=>{
+    const f=$('#docFile').files[0]; const name=$('#docName').value.trim()|| (f? f.name: 'Documento'); if(!f) return alert('Selecione um arquivo');
+    const rd=new FileReader(); rd.onload=e=>{ const docs=load(S.docs,[]); docs.unshift({name, data:e.target.result, when:Date.now()}); save(S.docs,docs); $('#docName').value=''; $('#docFile').value=''; alert('Documento salvo localmente');}; rd.readAsDataURL(f);
+  };
+  $('#listDocs').onclick = ()=>{
+    const docs = load(S.docs,[]);
+    $('#docsList').innerHTML = docs.map((d,i)=>`<div class='mt'>• ${d.name} — <a href='${d.data}' download='${d.name}'>baixar</a></div>`).join('') || '<div class="muted">Nenhum documento</div>';
+  };
+  $('#addSvc').onclick = ()=>{
+    const name=$('#svcName').value.trim(); const price=Number($('#svcPrice').value||0); if(!name) return alert('Nome do serviço é obrigatório');
+    const sv=load(S.services,[]); sv.push({name, price}); save(S.services,sv); $('#svcName').value=''; $('#svcPrice').value=''; refreshServices();
+  };
+  $('#resetApp').onclick = ()=>{ if(confirm('Isto apagará TODOS os dados locais. Continuar?')){ localStorage.clear(); location.reload(); } };
+  $('#logout').onclick = ()=>{ localStorage.removeItem(S.remember); location.reload(); };
+
+  function initUI(){
+    refreshServices(); refreshSales(); refreshOrders(); refreshSched(); refreshClients();
+    const web = load(S.web, ''); if(web) $('#webAdminUrl').value = web;
+    // Fill defaults
+    $('#fltDate').value = new Date().toISOString().slice(0,10);
+  }
+
+  // Optional: basic PWA install prompt (no service worker in single file)
+  let deferredPrompt=null; window.addEventListener('beforeinstallprompt', (e)=>{ e.preventDefault(); deferredPrompt=e; $('#installBtn').style.display='inline-block'; });
+  $('#installBtn').onclick = async ()=>{ if(!deferredPrompt){ alert('Use "Adicionar à tela inicial" do navegador.'); return;} deferredPrompt.prompt(); deferredPrompt=null; };
+})();
+</script>
+</body>
+</html>
