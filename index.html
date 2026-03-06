@@ -1,53 +1,207 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meu Site Incrível</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text x='0' y='14' font-size='16'>✨</text></svg>" type="image/svg+xml">
+    <title>Vaquinha VIP - 1 a 100</title>
+    <style>
+        :root {
+            --primary: #2ecc71;
+            --secondary: #27ae60;
+            --dark: #2c3e50;
+            --danger: #e74c3c;
+            --admin: #8e44ad;
+        }
+
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 20px; color: var(--dark); }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        
+        h1, h2 { text-align: center; color: var(--dark); }
+        .grid-numeros { display: grid; grid-template-columns: repeat(auto-fill, minmax(45px, 1fr)); gap: 5px; margin: 20px 0; }
+        .num { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border: 1px solid #ddd; cursor: pointer; font-size: 13px; border-radius: 4px; font-weight: bold; }
+        .num.disponivel:hover { background: var(--primary); color: white; }
+        .num.ocupado { background: var(--danger); color: white; cursor: not-allowed; }
+        .num.selecionado { background: #3498db; color: white; transform: scale(1.1); }
+
+        .form-user { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; background: #f9f9f9; padding: 20px; border-radius: 10px; border: 1px solid #eee; }
+        .full { grid-column: span 2; }
+        input { padding: 12px; border: 1px solid #ccc; border-radius: 6px; }
+        
+        button.btn-enviar { grid-column: span 2; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 16px; }
+
+        /* Estilo da Tabela de Ranking */
+        .ranking-section { margin-top: 40px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; }
+        .gold { background: #fff9c4; }
+
+        /* Painel Administrativo */
+        .admin-panel { margin-top: 50px; border-top: 2px dashed #ccc; padding-top: 20px; }
+        .admin-content { display: none; background: #f4f4f4; padding: 20px; border-radius: 10px; margin-top: 10px; }
+        .btn-admin { background: var(--admin); color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
+        .btn-reset { background: var(--danger); color: white; padding: 8px; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+        
+        .thumb { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+    </style>
 </head>
 <body>
-    <header>
-        <nav class="navbar">
-            <div class="container">
-                <a href="#" class="logo">Meu Site</a>
-                <ul class="nav-links">
-                    <li><a href="#home">Início</a></li>
-                    <li><a href="#posts">Postagens</a></li>
-                    <li><a href="#downloads">Downloads</a></li>
-                    <li><a href="#contact">Contato</a></li>
-                    <li><a href="login.html">Admin</a></li>
-                </ul>
-            </div>
-        </nav>
-    </header>
 
-    <main class="container">
-        <section id="home" class="hero-section">
-            <h1>Bem-vindo ao Meu Site!</h1>
-            <p>Explore as últimas postagens e faça seus downloads.</p>
-        </section>
+<div class="container">
+    <h1>🐮 Vaquinha Premiada</h1>
+    <p style="text-align: center;">Escolha um número e participe!</p>
 
-        <section id="posts" class="posts-section">
-            <h2>Últimas Postagens</h2>
-            <div id="post-list" class="post-grid">
-                </div>
-        </section>
+    <div id="grid" class="grid-numeros"></div>
 
-        <section id="downloads" class="downloads-section">
-            <h2>Downloads</h2>
-            <div id="download-list" class="download-grid">
-                </div>
-        </section>
-    </main>
+    <div class="form-user">
+        <input type="text" id="nome" placeholder="Nome Completo">
+        <input type="text" id="tel" maxlength="4" placeholder="4 últimos dígitos do Telefone">
+        <input type="text" id="pix" placeholder="Sua Chave Pix">
+        <input type="number" id="valor" min="0" max="999" placeholder="Valor que vai pagar (R$)">
+        <input type="text" id="link" class="full" placeholder="Link (Instagram ou Comprovante)">
+        <label class="full">Foto/Arquivo: <input type="file" id="foto" accept="image/*"></label>
+        <input type="hidden" id="numEscolhido">
+        <button class="btn-enviar" onclick="validarERegistrar()">CONFIRMAR PARTICIPAÇÃO</button>
+    </div>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 Meu Site. Todos os direitos reservados.</p>
+    <div class="ranking-section">
+        <h2>🏆 Top Pagantes</h2>
+        <table id="tabelaRanking">
+            <thead>
+                <tr>
+                    <th>Nº</th>
+                    <th>Foto</th>
+                    <th>Nome</th>
+                    <th>Tel</th>
+                    <th>Valor</th>
+                </tr>
+            </thead>
+            <tbody id="corpoRanking"></tbody>
+        </table>
+    </div>
+
+    <div class="admin-panel">
+        <button class="btn-admin" onclick="abrirAdmin()">⚙️ Painel Administrativo</button>
+        
+        <div id="adminContent" class="admin-content">
+            <h3>Gerenciamento de Dados</h3>
+            <p>Aqui você vê todos os detalhes, incluindo chaves Pix e links.</p>
+            <div id="listaAdminCompleta"></div>
+            <button class="btn-reset" onclick="resetarSistema()">⚠️ RESETAR TODO O SISTEMA</button>
         </div>
-    </footer>
+    </div>
+</div>
 
-    <script src="script.js"></script>
+<script>
+    const SENHA_ADMIN = "1234";
+    let participantes = JSON.parse(localStorage.getItem('dados_vaquinha')) || [];
+
+    function renderizarTudo() {
+        renderizarGrid();
+        renderizarRanking();
+        renderizarAdmin();
+    }
+
+    function renderizarGrid() {
+        const grid = document.getElementById('grid');
+        grid.innerHTML = '';
+        for (let i = 1; i <= 100; i++) {
+            const ocupado = participantes.find(p => p.numero == i);
+            const div = document.createElement('div');
+            div.className = `num ${ocupado ? 'ocupado' : 'disponivel'}`;
+            div.innerText = i;
+            if (!ocupado) {
+                div.onclick = () => selecionar(i, div);
+            }
+            grid.appendChild(div);
+        }
+    }
+
+    function selecionar(num, el) {
+        document.querySelectorAll('.num').forEach(d => d.classList.remove('selecionado'));
+        el.classList.add('selecionado');
+        document.getElementById('numEscolhido').value = num;
+    }
+
+    function validarERegistrar() {
+        const num = document.getElementById('numEscolhido').value;
+        const nome = document.getElementById('nome').value;
+        const tel = document.getElementById('tel').value;
+        const pix = document.getElementById('pix').value;
+        const valor = parseFloat(document.getElementById('valor').value);
+        const link = document.getElementById('link').value;
+        const fotoFile = document.getElementById('foto').files[0];
+
+        if (!num) return alert("Selecione um número no grid primeiro!");
+        if (!nome || tel.length < 4 || isNaN(valor)) return alert("Preencha os campos obrigatórios!");
+
+        if (fotoFile) {
+            const reader = new FileReader();
+            reader.onload = (e) => salvar(num, nome, tel, pix, valor, link, e.target.result);
+            reader.readAsDataURL(fotoFile);
+        } else {
+            salvar(num, nome, tel, pix, valor, link, null);
+        }
+    }
+
+    function salvar(numero, nome, tel, pix, valor, link, foto) {
+        participantes.push({ numero, nome, tel, pix, valor, link, foto, id: Date.now() });
+        localStorage.setItem('dados_vaquinha', JSON.stringify(participantes));
+        alert("Sucesso!");
+        location.reload();
+    }
+
+    function renderizarRanking() {
+        const corpo = document.getElementById('corpoRanking');
+        corpo.innerHTML = '';
+        const rank = [...participantes].sort((a, b) => b.valor - a.valor);
+
+        rank.forEach((p, i) => {
+            const tr = document.createElement('tr');
+            if(i === 0) tr.className = 'gold';
+            tr.innerHTML = `
+                <td>${p.numero}</td>
+                <td><img src="${p.foto || 'https://via.placeholder.com/40'}" class="thumb"></td>
+                <td>${p.nome}</td>
+                <td>****-${p.tel}</td>
+                <td>R$ ${p.valor.toFixed(2)}</td>
+            `;
+            corpo.appendChild(tr);
+        });
+    }
+
+    // FUNÇÕES ADMIN
+    function abrirAdmin() {
+        const pass = prompt("Digite a senha administrativa:");
+        if (pass === SENHA_ADMIN) {
+            document.getElementById('adminContent').style.display = 'block';
+        } else {
+            alert("Senha incorreta!");
+        }
+    }
+
+    function renderizarAdmin() {
+        const lista = document.getElementById('listaAdminCompleta');
+        if (participantes.length === 0) {
+            lista.innerHTML = "<p>Nenhum registro encontrado.</p>";
+            return;
+        }
+        let html = "<ul>";
+        participantes.forEach(p => {
+            html += `<li>Nº ${p.numero} - ${p.nome} | Pix: ${p.pix} | Link: <a href="${p.link}" target="_blank">Ver</a></li>`;
+        });
+        html += "</ul>";
+        lista.innerHTML = html;
+    }
+
+    function resetarSistema() {
+        if (confirm("TEM CERTEZA? Isso apagará todos os nomes, valores e fotos permanentemente.")) {
+            localStorage.removeItem('dados_vaquinha');
+            location.reload();
+        }
+    }
+
+    renderizarTudo();
+</script>
+
 </body>
 </html>
