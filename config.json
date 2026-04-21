@@ -1,9 +1,13 @@
-
 {
   "github": {
     "owner": "libiojunior",
     "repo": "cncmembros",
     "mainPath": "index.html"
+  },
+  "ui": {
+    "homeTitle": "Meus Arquivos",
+    "homeDescription": "Pesquise seus recursos ou use o código de acesso.",
+    "adminPasswordHash": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92"
   },
   "files": [
     {
@@ -13,14 +17,6 @@
       "thumb": "https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=800",
       "downloadUrl": "#",
       "category": "3D"
-    },
-    {
-      "id": "2",
-      "title": "Script Automação Python",
-      "description": "Script para gerenciamento de arquivos G-Code.",
-      "thumb": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=800",
-      "downloadUrl": "#",
-      "category": "Software"
     }
   ]
 }
