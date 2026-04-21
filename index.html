@@ -3,214 +3,175 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Vaquinha - Game Pad & Station</title>
+    <title>DevHub | Junior Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        :root {
-            --primary: #6c5ce7;
-            --secondary: #a29bfe;
-            --success: #00b894;
-            --danger: #d63031;
-            --dark: #2d3436;
-            --light: #dfe6e9;
-        }
-
-        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { background: #f0f2f5; margin: 0; padding: 15px; color: var(--dark); }
-        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
-        .tab-btn { flex: 1; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; background: var(--light); transition: 0.3s; }
-        .tab-btn.active { background: var(--primary); color: white; }
-
-        .header-info { background: var(--dark); color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; text-align: center; }
-        .header-info h2 { margin: 0 0 10px 0; color: var(--secondary); }
-        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.9em; }
-
-        .grid-rifa { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-bottom: 30px; }
-        .cota { border: 2px solid #eee; border-radius: 8px; padding: 10px; text-align: center; position: relative; background: #fff; transition: 0.2s; }
-        .cota.ocupada { border-color: var(--success); background: #e8f8f5; }
-        .cota.selecionada { border-color: var(--primary); box-shadow: 0 0 10px rgba(108, 92, 231, 0.3); }
-        .cota .num-label { position: absolute; top: 2px; left: 5px; font-size: 0.7em; color: #aaa; font-weight: bold; }
-        .cota .nome-user { font-size: 0.85em; font-weight: bold; display: block; margin-top: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .cota .tel-user { font-size: 0.75em; color: #636e72; }
-
-        .form-user { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #f9f9f9; padding: 20px; border-radius: 10px; }
-        .full { grid-column: span 2; }
-        input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
-        button.btn-confirmar { background: var(--success); color: white; border: none; padding: 15px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px; width: 100%; }
-
-        .admin-section { margin-top: 40px; border-top: 2px dashed #ccc; padding-top: 20px; }
-        .admin-btn { background: #636e72; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
-        
-        .concluida-card { border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-
-        @media (max-width: 500px) { .grid-rifa { grid-template-columns: 1fr 1fr; } }
+        body { background-color: #0f172a; color: #f8fafc; font-family: 'Inter', sans-serif; }
+        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+        .tab-active { border-bottom: 2px solid #38bdf8; color: #38bdf8; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
     </style>
 </head>
-<body>
+<body class="min-h-screen">
 
-<div class="container">
-    <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('andamento')">Em Andamento</button>
-        <button class="tab-btn" onclick="switchTab('concluidas')">Concluídas</button>
-    </div>
+    <nav class="glass sticky top-0 z-50 px-6 py-4 flex justify-between items-center shadow-2xl">
+        <div class="flex items-center gap-2">
+            <i data-lucide="terminal" class="text-sky-400"></i>
+            <span class="font-bold text-xl tracking-tighter">DEV<span class="text-sky-400">HUB</span></span>
+        </div>
+        <div class="flex gap-8 text-sm font-bold uppercase tracking-widest">
+            <button onclick="switchTab('library')" id="btn-library" class="tab-active py-1 transition-all">Downloads</button>
+            <button onclick="switchTab('editor')" id="btn-editor" class="py-1 hover:text-sky-400 transition-all text-slate-400">Admin Editor</button>
+        </div>
+    </nav>
 
-    <div id="view-andamento">
-        <div class="header-info">
-            <h2 id="display-titulo">Projeto Game Pad e Game Station</h2>
-            <div class="info-grid">
-                <div>VALOR TOTAL: <br><b id="display-total">R$ 0,00</b></div>
-                <div>VALOR DA COTA: <br><b id="display-cota">R$ 0,00</b></div>
-                <div class="full" style="margin-top:10px; border-top: 1px solid #444; padding-top:10px;">
-                    PIX PARA PAGAMENTO: <br><b id="display-pix">Defina no Painel</b>
+    <main id="view-library" class="container mx-auto px-6 py-12">
+        <div class="mb-12">
+            <h1 class="text-5xl font-black mb-4 bg-gradient-to-r from-white to-slate-500 bg-clip-text text-transparent">Meus Arquivos</h1>
+            <p class="text-slate-400 max-w-xl">Acesse seus modelos 3D, scripts e recursos. Tudo organizado e pronto para o uso.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="glass rounded-3xl overflow-hidden group hover:scale-[1.02] transition-all duration-300 border-slate-800">
+                <div class="h-52 overflow-hidden relative">
+                    <div class="absolute top-4 right-4 bg-sky-500 text-[10px] font-bold px-2 py-1 rounded shadow-lg z-10">LATEST</div>
+                    <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=800" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-80">
+                </div>
+                <div class="p-8">
+                    <h3 class="text-xl font-bold mb-2">Suporte Berimbau 3D</h3>
+                    <p class="text-slate-400 text-sm mb-6 leading-relaxed">Modelo STL para impressão 3D com trava por gravidade.</p>
+                    <a href="#" class="flex items-center justify-center gap-3 bg-white text-slate-900 font-black py-4 rounded-2xl hover:bg-sky-400 transition-colors group">
+                        <i data-lucide="download" class="w-5 h-5 group-hover:animate-bounce"></i>
+                        BAIXAR AGORA
+                    </a>
                 </div>
             </div>
         </div>
+    </main>
 
-        <div id="grid-rifa" class="grid-rifa"></div>
-
-        <div id="form-registro" class="form-user">
-            <h3 class="full" style="margin:0">Registrar Cota <span id="num-selecionado"></span></h3>
-            <input type="text" id="user-nome" placeholder="Nome Completo">
-            <input type="text" id="user-tel" maxlength="4" placeholder="4 últimos dígitos do Telefone">
-            <input type="hidden" id="input-numero">
-            <button class="btn-confirmar full" onclick="salvarParticipacao()">CONFIRMAR MEU NÚMERO</button>
-        </div>
-    </div>
-
-    <div id="view-concluidas" style="display:none">
-        <h2>Histórico de Projetos</h2>
-        <div id="lista-concluidas"></div>
-    </div>
-
-    <div class="admin-section">
-        <button class="admin-btn" onclick="abrirAdmin()">⚙️ Painel Admin (Senha: 1234)</button>
-        <div id="admin-controls" style="display:none; background:#eee; padding:20px; margin-top:10px; border-radius:10px;">
-            <h4>Configurações Gerais</h4>
-            <label>Título:</label><input type="text" id="conf-titulo" value="Projeto Game Pad e Game Station"><br><br>
-            <label>Valor Total R$:</label><input type="number" id="conf-total"><br><br>
-            <label>Valor Cota R$:</label><input type="number" id="conf-cota"><br><br>
-            <label>Chave Pix:</label><input type="text" id="conf-pix"><br><br>
-            <label>Total de Cotas:</label><input type="number" id="conf-cotas-total" value="20"><br><br>
-            <button onclick="salvarConfig()" style="background:var(--primary); color:white; border:none; padding:10px; cursor:pointer;">Atualizar Vaquinha</button>
-            <button onclick="finalizarVaquinha()" style="background:var(--success); color:white; border:none; padding:10px; cursor:pointer;">Finalizar e Salvar Histórico</button>
-            <button onclick="resetar()" style="background:var(--danger); color:white; border:none; padding:10px; cursor:pointer;">Limpar Dados</button>
-        </div>
-    </div>
-</div>
-
-<script>
-    let config = JSON.parse(localStorage.getItem('v3_config')) || { titulo: "Projeto Game Pad e Game Station", total: 0, cota: 0, pix: "", numCotas: 20 };
-    let participacoes = JSON.parse(localStorage.getItem('v3_part')) || [];
-    let historico = JSON.parse(localStorage.getItem('v3_hist')) || [];
-
-    function init() {
-        document.getElementById('display-titulo').innerText = config.titulo;
-        document.getElementById('display-total').innerText = `R$ ${parseFloat(config.total).toFixed(2)}`;
-        document.getElementById('display-cota').innerText = `R$ ${parseFloat(config.cota).toFixed(2)}`;
-        document.getElementById('display-pix').innerText = config.pix || "A definir";
-        renderGrid();
-    }
-
-    function renderGrid() {
-        const grid = document.getElementById('grid-rifa');
-        grid.innerHTML = '';
-        for (let i = 1; i <= config.numCotas; i++) {
-            const p = participacoes.find(x => x.numero == i);
-            const div = document.createElement('div');
-            div.className = `cota ${p ? 'ocupada' : 'disponivel'}`;
+    <main id="view-editor" class="hidden container mx-auto px-6 py-12">
+        <div class="max-w-5xl mx-auto space-y-8">
             
-            if (p) {
-                div.innerHTML = `<span class="num-label">${i}</span>
-                                 <span class="nome-user">${p.nome}</span>
-                                 <span class="tel-user">****-${p.tel}</span>`;
-            } else {
-                div.innerHTML = `<span class="num-label">${i}</span><span class="nome-user">LIVRE</span>`;
-                div.onclick = () => selecionar(i, div);
-            }
-            grid.appendChild(div);
-        }
-    }
-
-    function selecionar(num, el) {
-        document.querySelectorAll('.cota').forEach(d => d.classList.remove('selecionado'));
-        el.classList.add('selecionado');
-        document.getElementById('num-selecionado').innerText = `(Nº ${num})`;
-        document.getElementById('input-numero').value = num;
-    }
-
-    function salvarParticipacao() {
-        const num = document.getElementById('input-numero').value;
-        const nome = document.getElementById('user-nome').value;
-        const tel = document.getElementById('user-tel').value;
-
-        if (!num) return alert("Clique em um número livre no grid!");
-        if (!nome || tel.length < 4) return alert("Preencha o nome e os 4 dígitos do telefone!");
-
-        participacoes.push({ numero: num, nome, tel });
-        localStorage.setItem('v3_part', JSON.stringify(participacoes));
-        location.reload();
-    }
-
-    function switchTab(tab) {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        event.target.classList.add('active');
-        if (tab === 'andamento') {
-            document.getElementById('view-andamento').style.display = 'block';
-            document.getElementById('view-concluidas').style.display = 'none';
-        } else {
-            document.getElementById('view-andamento').style.display = 'none';
-            document.getElementById('view-concluidas').style.display = 'block';
-            renderHistorico();
-        }
-    }
-
-    function renderHistorico() {
-        const lista = document.getElementById('lista-concluidas');
-        lista.innerHTML = historico.length ? '' : '<p>Nenhuma vaquinha concluída.</p>';
-        historico.forEach(h => {
-            lista.innerHTML += `
-                <div class="concluida-card">
+            <div class="glass rounded-[40px] p-10">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
                     <div>
-                        <strong>${h.titulo}</strong><br>
-                        <small>Total: R$ ${h.total.toFixed(2)} | Data: ${h.data}</small>
+                        <h2 class="text-3xl font-bold flex items-center gap-3">
+                            <i data-lucide="code-2" class="text-sky-400"></i> Editor Master
+                        </h2>
+                        <p class="text-slate-400">Modifique o index.html em tempo real.</p>
                     </div>
-                    <span style="color:var(--success)">✅ Finalizada</span>
+                    <input type="password" id="gh-token" placeholder="Insira seu GitHub PAT" class="bg-slate-950 border border-slate-700 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-sky-500 outline-none w-full md:w-64">
                 </div>
-            `;
-        });
-    }
 
-    function abrirAdmin() {
-        if (prompt("Senha:") === "1234") document.getElementById('admin-controls').style.display = 'block';
-    }
+                <textarea id="code-editor" spellcheck="false" class="w-full h-96 bg-slate-950 font-mono text-sm border border-slate-800 rounded-3xl p-6 focus:ring-2 focus:ring-sky-500 outline-none text-sky-200 mb-6" placeholder="Carregue o código aqui..."></textarea>
+                
+                <button onclick="saveToGitHub()" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-5 rounded-2xl transition flex items-center justify-center gap-3 shadow-xl shadow-sky-900/40">
+                    <i data-lucide="save" class="w-6 h-6"></i>
+                    PUBLICAR ALTERAÇÕES NO GITHUB
+                </button>
+            </div>
 
-    function salvarConfig() {
-        config.titulo = document.getElementById('conf-titulo').value;
-        config.total = document.getElementById('conf-total').value;
-        config.cota = document.getElementById('conf-cota').value;
-        config.pix = document.getElementById('conf-pix').value;
-        config.numCotas = document.getElementById('conf-cotas-total').value;
-        localStorage.setItem('v3_config', JSON.stringify(config));
-        location.reload();
-    }
+            <div class="glass rounded-[40px] p-10 border-dashed border-2 border-slate-700">
+                <h3 class="text-2xl font-bold mb-6 flex items-center gap-3">
+                    <i data-lucide="upload-cloud" class="text-emerald-400"></i> Upload de Binários
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <input type="file" id="file-input" class="file:bg-slate-800 file:text-white file:border-0 file:rounded-xl file:px-4 file:py-2 file:mr-4 file:font-bold hover:file:bg-slate-700 cursor-pointer">
+                    <button onclick="uploadFileToGitHub()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl transition">
+                        SUBIR PARA O REPOSITÓRIO
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
 
-    function finalizarVaquinha() {
-        if (!confirm("Isso moverá os dados atuais para o histórico e resetará a lista. Continuar?")) return;
-        historico.push({
-            titulo: config.titulo,
-            total: participacoes.length * config.cota,
-            data: new Date().toLocaleDateString('pt-BR')
-        });
-        localStorage.setItem('v3_hist', JSON.stringify(historico));
-        localStorage.removeItem('v3_part');
-        location.reload();
-    }
+    <script>
+        lucide.createIcons();
 
-    function resetar() { if(confirm("Apagar TUDO?")) { localStorage.clear(); location.reload(); } }
+        const githubConfig = {
+            owner: 'SEU_USUARIO', // <--- COLOQUE SEU USUÁRIO
+            repo: 'SEU_REPOSITORIO', // <--- COLOQUE SEU REPOSITÓRIO
+            path: 'index.html'
+        };
 
-    init();
-</script>
+        function switchTab(tab) {
+            const lib = document.getElementById('view-library');
+            const edt = document.getElementById('view-editor');
+            const bLib = document.getElementById('btn-library');
+            const bEdt = document.getElementById('btn-editor');
 
+            if(tab === 'library') {
+                lib.classList.remove('hidden'); edt.classList.add('hidden');
+                bLib.className = 'tab-active py-1'; bEdt.className = 'py-1 hover:text-sky-400 text-slate-400';
+            } else {
+                lib.classList.add('hidden'); edt.classList.remove('hidden');
+                bEdt.className = 'tab-active py-1'; bLib.className = 'py-1 hover:text-sky-400 text-slate-400';
+                // Carrega o código atual ao abrir o editor
+                if(document.getElementById('code-editor').value === "") loadCurrentCode();
+            }
+        }
+
+        async function loadCurrentCode() {
+            const url = `https://api.github.com/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${githubConfig.path}`;
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                document.getElementById('code-editor').value = decodeURIComponent(escape(atob(data.content)));
+            } catch (e) { console.log("Erro ao carregar código inicial."); }
+        }
+
+        async function saveToGitHub() {
+            const token = document.getElementById('gh-token').value;
+            const content = document.getElementById('code-editor').value;
+            const url = `https://api.github.com/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${githubConfig.path}`;
+
+            if(!token) return alert("Insira o Token!");
+
+            try {
+                const getRes = await fetch(url, { headers: { 'Authorization': `token ${token}` } });
+                const fileData = await getRes.json();
+                const b64 = btoa(unescape(encodeURIComponent(content)));
+
+                const putRes = await fetch(url, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: 'Update via WebEditor', content: b64, sha: fileData.sha })
+                });
+
+                if(putRes.ok) alert("✅ Site Atualizado!");
+                else alert("❌ Erro ao salvar.");
+            } catch(e) { alert("Erro na conexão."); }
+        }
+
+        async function uploadFileToGitHub() {
+            const token = document.getElementById('gh-token').value;
+            const fileInput = document.getElementById('file-input');
+            if(!fileInput.files[0] || !token) return alert("Selecione arquivo e token!");
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            reader.onload = async () => {
+                const content = reader.result.split(',')[1];
+                const url = `https://api.github.com/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${file.name}`;
+                
+                let sha;
+                const getRes = await fetch(url, { headers: { 'Authorization': `token ${token}` } });
+                if(getRes.ok) { const data = await getRes.json(); sha = data.sha; }
+
+                const putRes = await fetch(url, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `token ${token}` },
+                    body: JSON.stringify({ message: `Upload: ${file.name}`, content, sha })
+                });
+
+                if(putRes.ok) alert("✅ Arquivo Enviado!");
+                else alert("❌ Falha no Upload.");
+            };
+            reader.readAsDataURL(file);
+        }
+    </script>
 </body>
 </html>
