@@ -5,16 +5,16 @@
     "mainPath": "index.html"
   },
   "ui": {
-    "homeTitle": "Meus Arquivos",
-    "homeDescription": "Pesquise seus recursos ou use o código de acesso.",
+    "homeTitle": "CNC Membros",
+    "homeDescription": "Repositório de recursos técnicos e modelos 3D.",
     "adminPasswordHash": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92"
   },
   "files": [
     {
       "id": "1",
-      "title": "Suporte Berimbau 3D",
-      "description": "Modelo STL para impressão 3D com trava por gravidade.",
-      "thumb": "https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=800",
+      "title": "Exemplo STL",
+      "description": "Descrição do primeiro modelo aqui.",
+      "thumb": "https://via.placeholder.com/800",
       "downloadUrl": "#",
       "category": "3D"
     }
