@@ -1,1 +1,74 @@
 
+:root {
+    --primary: #2563eb;
+    --dark: #0f172a;
+    --light: #f8fafc;
+    --transition: all 0.3s ease;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: var(--dark);
+    color: var(--light);
+    margin: 0;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 5%;
+    background: #1e293b;
+    align-items: center;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 2rem 5%;
+}
+
+.post-box {
+    background: #1e293b;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: var(--transition);
+    border: 1px solid transparent;
+}
+
+/* Efeito Hover solicitado */
+.post-box:hover {
+    transform: translateY(-10px);
+    border-color: var(--primary);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+}
+
+.post-box img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.post-info {
+    padding: 15px;
+}
+
+.post-info h3 { margin: 0 0 10px; font-size: 1.1rem; }
+.post-info p { font-size: 0.8rem; color: #94a3b8; margin: 5px 0; }
+
+.btn-download {
+    display: block;
+    text-align: center;
+    background: var(--primary);
+    color: white;
+    text-decoration: none;
+    padding: 8px;
+    border-radius: 6px;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+/* Modal e Admin */
+.modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); }
+.modal-content { background: #1e293b; margin: 5% auto; padding: 20px; width: 90%; max-width: 500px; border-radius: 8px; }
+input { width: 100%; padding: 10px; margin: 10px 0; border-radius: 4px; border: none; }
