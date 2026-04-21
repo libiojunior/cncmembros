@@ -1,1 +1,26 @@
 
+{
+  "github": {
+    "owner": "libiojunior",
+    "repo": "cncmembros",
+    "mainPath": "index.html"
+  },
+  "files": [
+    {
+      "id": "1",
+      "title": "Suporte Berimbau 3D",
+      "description": "Modelo STL para impressão 3D com trava por gravidade.",
+      "thumb": "https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=800",
+      "downloadUrl": "#",
+      "category": "3D"
+    },
+    {
+      "id": "2",
+      "title": "Script Automação Python",
+      "description": "Script para gerenciamento de arquivos G-Code.",
+      "thumb": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=800",
+      "downloadUrl": "#",
+      "category": "Software"
+    }
+  ]
+}
