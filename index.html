@@ -3,41 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Download Hub</title>
+    <title>NeonVault | Premium Downloads</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Orbitron:wght@500;900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <h1>Download Hub</h1>
-        <button id="btnOpenAdmin">Admin</button>
+    <nav class="navbar">
+        <div class="logo">NEON<span>VAULT</span></div>
+        <div class="nav-links">
+            <a href="#gallery">Explorar</a>
+            <button id="btnOpenAdmin" class="btn-neon-outline">Painel Admin</button>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <h1 class="glitch-text">PRONTO PARA A DIVERSÃO</h1>
+            <p>Acesse o repositório definitivo de arquivos de alta performance com estética premium.</p>
+            <a href="#gallery" class="btn-neon-full">Ver Downloads</a>
+        </div>
     </header>
 
     <main id="app">
+        <div class="section-title">
+            <h2>Arquivos Disponíveis</h2>
+            <div class="underline"></div>
+        </div>
+        
         <section id="gallery" class="grid-container">
             </section>
     </main>
+
+    <footer>
+        <p>&copy; 2026 NeonVault. Desenvolvido por Junior.</p>
+    </footer>
 
     <div id="adminModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
             <div id="loginSection">
-                <h2>Acesso Restrito</h2>
-                <input type="password" id="adminPass" placeholder="Senha Admin">
-                <button onclick="checkLogin()">Entrar</button>
+                <h2 class="neon-text-blue">Acesso Restrito</h2>
+                <input type="password" id="adminPass" placeholder="Digite a senha admin">
+                <button onclick="checkLogin()" class="btn-neon-full">Autenticar</button>
             </div>
             
             <div id="adminPanel" style="display: none;">
-                <h2>Gerenciar Conteúdo</h2>
+                <h2 class="neon-text-blue">Gerenciar Conteúdo</h2>
                 <form id="uploadForm">
                     <input type="text" id="fileName" placeholder="Nome do Arquivo" required>
-                    <input type="text" id="fileThumb" placeholder="URL da Imagem (Thumbnail)" required>
-                    <input type="text" id="fileUrl" placeholder="URL de Download" required>
-                    <input type="text" id="uploaderName" placeholder="Seu Nome" required>
-                    <button type="submit">Adicionar Postagem</button>
+                    <input type="text" id="fileThumb" placeholder="URL da Imagem" required>
+                    <input type="text" id="fileUrl" placeholder="Link de Download" required>
+                    <input type="text" id="uploaderName" placeholder="Nome do Upload" required>
+                    <button type="submit" class="btn-neon-full">Publicar Postagem</button>
                 </form>
-                <hr>
-                <div id="editList">
-                    </div>
+                <div id="editList"></div>
             </div>
         </div>
     </div>
