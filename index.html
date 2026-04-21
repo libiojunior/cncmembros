@@ -3,86 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DevHub | CNC Membros</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        body { background-color: #0f172a; color: #f8fafc; font-family: 'Inter', sans-serif; }
-        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
-        .admin-hidden { display: none !important; }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
-    </style>
+    <title>Download Hub</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <header>
+        <h1>Download Hub</h1>
+        <button id="btnOpenAdmin">Admin</button>
+    </header>
 
-    <nav class="glass sticky top-0 z-50 px-6 py-4 flex justify-between items-center shadow-2xl">
-        <div class="flex items-center gap-2">
-            <i data-lucide="terminal" class="text-sky-400"></i>
-            <span class="font-bold text-xl tracking-tighter">DEV<span class="text-sky-400">HUB</span></span>
-        </div>
-    </nav>
-
-    <main id="view-library" class="container mx-auto px-6 py-12">
-        <div class="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
-            <div>
-                <h1 id="ui-home-title" class="text-5xl font-black mb-4 bg-gradient-to-r from-white to-slate-500 bg-clip-text text-transparent">Carregando...</h1>
-                <p id="ui-home-desc" class="text-slate-400">Aguarde enquanto preparamos seus arquivos.</p>
-            </div>
-            <div class="relative w-full md:w-96">
-                <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5"></i>
-                <input type="text" id="main-search" placeholder="Buscar arquivos..." 
-                    class="w-full bg-slate-900/50 border border-slate-700 rounded-2xl py-4 pl-12 pr-4 focus:ring-2 focus:ring-sky-500 outline-none transition-all">
-            </div>
-        </div>
-        <div id="files-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+    <main id="app">
+        <section id="gallery" class="grid-container">
+            </section>
     </main>
 
-    <main id="view-admin" class="admin-hidden container mx-auto px-6 py-12">
-        <div class="max-w-5xl mx-auto space-y-8">
-            <div class="flex justify-between items-center">
-                <button onclick="location.reload()" class="text-slate-400 hover:text-white flex items-center gap-2">
-                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Sair do Painel
-                </button>
-                <input type="password" id="gh-token" placeholder="GitHub Token (ghp_...)" class="bg-slate-950 border border-slate-700 rounded-xl px-4 py-2 text-sm outline-none w-64 focus:ring-1 focus:ring-sky-500">
+    <div id="adminModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="loginSection">
+                <h2>Acesso Restrito</h2>
+                <input type="password" id="adminPass" placeholder="Senha Admin">
+                <button onclick="checkLogin()">Entrar</button>
             </div>
-
-            <div class="glass rounded-[30px] p-8 border border-sky-500/20">
-                <h3 class="text-xl font-bold mb-6 flex items-center gap-2"><i data-lucide="plus-circle" class="text-sky-400"></i> Cadastrar / Editar Arquivo</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <input type="text" id="form-title" placeholder="Título do Arquivo" class="bg-slate-950 border border-slate-800 rounded-xl p-3 outline-none focus:border-sky-500">
-                    <input type="text" id="form-thumb" placeholder="URL da Imagem" class="bg-slate-950 border border-slate-800 rounded-xl p-3 outline-none focus:border-sky-500">
-                    <input type="text" id="form-url" placeholder="URL de Download" class="bg-slate-950 border border-slate-800 rounded-xl p-3 outline-none focus:border-sky-500">
-                    <select id="form-category" class="bg-slate-950 border border-slate-800 rounded-xl p-3 outline-none focus:border-sky-500 text-slate-400">
-                        <option value="3D">Modelo 3D (STL)</option>
-                        <option value="Software">Software/Script</option>
-                        <option value="Documento">Documento/PDF</option>
-                    </select>
-                    <textarea id="form-desc" placeholder="Breve descrição..." class="md:col-span-2 bg-slate-950 border border-slate-800 rounded-xl p-3 h-24 outline-none focus:border-sky-500"></textarea>
-                </div>
-                <button onclick="saveNewOrEditedFile()" class="mt-6 w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-4 rounded-xl transition flex items-center justify-center gap-2">
-                    <i data-lucide="check" class="w-5 h-5"></i> SALVAR NA LISTA E GITHUB
-                </button>
-            </div>
-
-            <div class="glass rounded-[30px] p-8 border border-slate-700">
-                <h3 class="text-xl font-bold mb-6 flex items-center gap-2"><i data-lucide="list" class="text-amber-400"></i> Gerenciar Existentes</h3>
-                <div id="admin-files-list" class="space-y-3 max-h-[400px] overflow-y-auto pr-2"></div>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="glass rounded-[30px] p-6">
-                    <h3 class="text-sm font-bold mb-4 opacity-50 uppercase tracking-tighter">Configurações (JSON)</h3>
-                    <textarea id="json-editor" readonly class="w-full h-64 bg-slate-950 font-mono text-[10px] border border-slate-800 rounded-xl p-4 outline-none text-amber-200"></textarea>
-                </div>
-                <div class="glass rounded-[30px] p-6">
-                    <h3 class="text-sm font-bold mb-4 opacity-50 uppercase tracking-tighter">Código (HTML)</h3>
-                    <textarea id="code-editor" readonly class="w-full h-64 bg-slate-950 font-mono text-[10px] border border-slate-800 rounded-xl p-4 outline-none text-sky-200"></textarea>
-                </div>
+            
+            <div id="adminPanel" style="display: none;">
+                <h2>Gerenciar Conteúdo</h2>
+                <form id="uploadForm">
+                    <input type="text" id="fileName" placeholder="Nome do Arquivo" required>
+                    <input type="text" id="fileThumb" placeholder="URL da Imagem (Thumbnail)" required>
+                    <input type="text" id="fileUrl" placeholder="URL de Download" required>
+                    <input type="text" id="uploaderName" placeholder="Seu Nome" required>
+                    <button type="submit">Adicionar Postagem</button>
+                </form>
+                <hr>
+                <div id="editList">
+                    </div>
             </div>
         </div>
-    </main>
+    </div>
 
-    <script src="app.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
