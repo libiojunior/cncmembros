@@ -3,175 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DevHub | Junior Edition</title>
+    <title>DevHub | Biblioteca Privada</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         body { background-color: #0f172a; color: #f8fafc; font-family: 'Inter', sans-serif; }
         .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
-        .tab-active { border-bottom: 2px solid #38bdf8; color: #38bdf8; }
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        .hidden-admin { display: none !important; }
     </style>
 </head>
-<body class="min-h-screen">
+<body>
 
     <nav class="glass sticky top-0 z-50 px-6 py-4 flex justify-between items-center shadow-2xl">
         <div class="flex items-center gap-2">
             <i data-lucide="terminal" class="text-sky-400"></i>
             <span class="font-bold text-xl tracking-tighter">DEV<span class="text-sky-400">HUB</span></span>
         </div>
-        <div class="flex gap-8 text-sm font-bold uppercase tracking-widest">
-            <button onclick="switchTab('library')" id="btn-library" class="tab-active py-1 transition-all">Downloads</button>
-            <button onclick="switchTab('editor')" id="btn-editor" class="py-1 hover:text-sky-400 transition-all text-slate-400">Admin Editor</button>
-        </div>
-    </nav>
+        </nav>
 
     <main id="view-library" class="container mx-auto px-6 py-12">
-        <div class="mb-12">
-            <h1 class="text-5xl font-black mb-4 bg-gradient-to-r from-white to-slate-500 bg-clip-text text-transparent">Meus Arquivos</h1>
-            <p class="text-slate-400 max-w-xl">Acesse seus modelos 3D, scripts e recursos. Tudo organizado e pronto para o uso.</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div class="glass rounded-3xl overflow-hidden group hover:scale-[1.02] transition-all duration-300 border-slate-800">
-                <div class="h-52 overflow-hidden relative">
-                    <div class="absolute top-4 right-4 bg-sky-500 text-[10px] font-bold px-2 py-1 rounded shadow-lg z-10">LATEST</div>
-                    <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=800" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-80">
-                </div>
-                <div class="p-8">
-                    <h3 class="text-xl font-bold mb-2">Suporte Berimbau 3D</h3>
-                    <p class="text-slate-400 text-sm mb-6 leading-relaxed">Modelo STL para impressão 3D com trava por gravidade.</p>
-                    <a href="#" class="flex items-center justify-center gap-3 bg-white text-slate-900 font-black py-4 rounded-2xl hover:bg-sky-400 transition-colors group">
-                        <i data-lucide="download" class="w-5 h-5 group-hover:animate-bounce"></i>
-                        BAIXAR AGORA
-                    </a>
-                </div>
+        <div class="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div>
+                <h1 class="text-5xl font-black mb-4 bg-gradient-to-r from-white to-slate-500 bg-clip-text text-transparent">Meus Arquivos</h1>
+                <p class="text-slate-400">Pesquise seus recursos ou use o código de acesso.</p>
             </div>
-        </div>
-    </main>
-
-    <main id="view-editor" class="hidden container mx-auto px-6 py-12">
-        <div class="max-w-5xl mx-auto space-y-8">
             
-            <div class="glass rounded-[40px] p-10">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
-                    <div>
-                        <h2 class="text-3xl font-bold flex items-center gap-3">
-                            <i data-lucide="code-2" class="text-sky-400"></i> Editor Master
-                        </h2>
-                        <p class="text-slate-400">Modifique o index.html em tempo real.</p>
-                    </div>
-                    <input type="password" id="gh-token" placeholder="Insira seu GitHub PAT" class="bg-slate-950 border border-slate-700 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-sky-500 outline-none w-full md:w-64">
-                </div>
-
-                <textarea id="code-editor" spellcheck="false" class="w-full h-96 bg-slate-950 font-mono text-sm border border-slate-800 rounded-3xl p-6 focus:ring-2 focus:ring-sky-500 outline-none text-sky-200 mb-6" placeholder="Carregue o código aqui..."></textarea>
-                
-                <button onclick="saveToGitHub()" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-5 rounded-2xl transition flex items-center justify-center gap-3 shadow-xl shadow-sky-900/40">
-                    <i data-lucide="save" class="w-6 h-6"></i>
-                    PUBLICAR ALTERAÇÕES NO GITHUB
-                </button>
-            </div>
-
-            <div class="glass rounded-[40px] p-10 border-dashed border-2 border-slate-700">
-                <h3 class="text-2xl font-bold mb-6 flex items-center gap-3">
-                    <i data-lucide="upload-cloud" class="text-emerald-400"></i> Upload de Binários
-                </h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <input type="file" id="file-input" class="file:bg-slate-800 file:text-white file:border-0 file:rounded-xl file:px-4 file:py-2 file:mr-4 file:font-bold hover:file:bg-slate-700 cursor-pointer">
-                    <button onclick="uploadFileToGitHub()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl transition">
-                        SUBIR PARA O REPOSITÓRIO
-                    </button>
-                </div>
+            <div class="relative w-full md:w-96">
+                <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5"></i>
+                <input type="text" id="main-search" placeholder="Buscar arquivos..." 
+                    class="w-full bg-slate-900/50 border border-slate-700 rounded-2xl py-4 pl-12 pr-4 focus:ring-2 focus:ring-sky-500 outline-none transition-all">
             </div>
         </div>
+
+        <div id="files-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            </div>
     </main>
 
-    <script>
-        lucide.createIcons();
+    <main id="view-editor" class="hidden-admin container mx-auto px-6 py-12">
+        <div class="max-w-5xl mx-auto glass rounded-[40px] p-10">
+            <button onclick="window.location.reload()" class="mb-4 text-slate-400 hover:text-white flex items-center gap-2">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> Sair do Painel
+            </button>
+            <h2 class="text-3xl font-bold mb-8">Painel Administrativo</h2>
+            </div>
+    </main>
 
-        const githubConfig = {
-            owner: 'libiojunior', // <--- COLOQUE SEU USUÁRIO
-            repo: 'cncmembros', // <--- COLOQUE SEU REPOSITÓRIO
-            path: 'index.html'
-        };
-
-        function switchTab(tab) {
-            const lib = document.getElementById('view-library');
-            const edt = document.getElementById('view-editor');
-            const bLib = document.getElementById('btn-library');
-            const bEdt = document.getElementById('btn-editor');
-
-            if(tab === 'library') {
-                lib.classList.remove('hidden'); edt.classList.add('hidden');
-                bLib.className = 'tab-active py-1'; bEdt.className = 'py-1 hover:text-sky-400 text-slate-400';
-            } else {
-                lib.classList.add('hidden'); edt.classList.remove('hidden');
-                bEdt.className = 'tab-active py-1'; bLib.className = 'py-1 hover:text-sky-400 text-slate-400';
-                // Carrega o código atual ao abrir o editor
-                if(document.getElementById('code-editor').value === "") loadCurrentCode();
-            }
-        }
-
-        async function loadCurrentCode() {
-            const url = `https://api.github.com/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${githubConfig.path}`;
-            try {
-                const res = await fetch(url);
-                const data = await res.json();
-                document.getElementById('code-editor').value = decodeURIComponent(escape(atob(data.content)));
-            } catch (e) { console.log("Erro ao carregar código inicial."); }
-        }
-
-        async function saveToGitHub() {
-            const token = document.getElementById('gh-token').value;
-            const content = document.getElementById('code-editor').value;
-            const url = `https://api.github.com/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${githubConfig.path}`;
-
-            if(!token) return alert("Insira o Token!");
-
-            try {
-                const getRes = await fetch(url, { headers: { 'Authorization': `token ${token}` } });
-                const fileData = await getRes.json();
-                const b64 = btoa(unescape(encodeURIComponent(content)));
-
-                const putRes = await fetch(url, {
-                    method: 'PUT',
-                    headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: 'Update via WebEditor', content: b64, sha: fileData.sha })
-                });
-
-                if(putRes.ok) alert("✅ Site Atualizado!");
-                else alert("❌ Erro ao salvar.");
-            } catch(e) { alert("Erro na conexão."); }
-        }
-
-        async function uploadFileToGitHub() {
-            const token = document.getElementById('gh-token').value;
-            const fileInput = document.getElementById('file-input');
-            if(!fileInput.files[0] || !token) return alert("Selecione arquivo e token!");
-
-            const file = fileInput.files[0];
-            const reader = new FileReader();
-            reader.onload = async () => {
-                const content = reader.result.split(',')[1];
-                const url = `https://api.github.com/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${file.name}`;
-                
-                let sha;
-                const getRes = await fetch(url, { headers: { 'Authorization': `token ${token}` } });
-                if(getRes.ok) { const data = await getRes.json(); sha = data.sha; }
-
-                const putRes = await fetch(url, {
-                    method: 'PUT',
-                    headers: { 'Authorization': `token ${token}` },
-                    body: JSON.stringify({ message: `Upload: ${file.name}`, content, sha })
-                });
-
-                if(putRes.ok) alert("✅ Arquivo Enviado!");
-                else alert("❌ Falha no Upload.");
-            };
-            reader.readAsDataURL(file);
-        }
-    </script>
+    <script src="app.js"></script>
 </body>
 </html>
