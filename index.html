@@ -1,64 +1,46 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DevHub | CNC Membros</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        body { background-color: #0f172a; color: #f8fafc; font-family: 'Inter', sans-serif; }
-        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
-        .admin-hidden { display: none !important; }
-    </style>
-</head>
-<body>
-
-    <nav class="glass sticky top-0 z-50 px-6 py-4 flex justify-between items-center shadow-2xl">
-        <div class="flex items-center gap-2">
-            <i data-lucide="terminal" class="text-sky-400"></i>
-            <span class="font-bold text-xl tracking-tighter">DEV<span class="text-sky-400">HUB</span></span>
-        </div>
-    </nav>
-
-    <main id="view-library" class="container mx-auto px-6 py-12">
-        <div class="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
-            <div>
-                <h1 class="text-5xl font-black mb-4 bg-gradient-to-r from-white to-slate-500 bg-clip-text text-transparent">Meus Arquivos</h1>
-                <p class="text-slate-400">Pesquise recursos ou use o código de acesso.</p>
-            </div>
-            <div class="relative w-full md:w-96">
-                <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5"></i>
-                <input type="text" id="main-search" placeholder="Buscar arquivos..." 
-                    class="w-full bg-slate-900/50 border border-slate-700 rounded-2xl py-4 pl-12 pr-4 focus:ring-2 focus:ring-sky-500 outline-none transition-all">
-            </div>
-        </div>
-
-        <div id="files-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            </div>
-    </main>
-
-    <main id="view-admin" class="admin-hidden container mx-auto px-6 py-12">
-        <div class="max-w-5xl mx-auto space-y-8">
+<main id="view-admin" class="admin-hidden container mx-auto px-6 py-12">
+    <div class="max-w-5xl mx-auto space-y-8">
+        <div class="flex justify-between items-center">
             <button onclick="location.reload()" class="text-slate-400 hover:text-white flex items-center gap-2">
-                <i data-lucide="arrow-left" class="w-4 h-4"></i> Sair do Painel
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> Sair
             </button>
-            
-            <div class="glass rounded-[40px] p-10">
-                <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
-                    <h2 class="text-3xl font-bold">Editor de Código</h2>
-                    <input type="password" id="gh-token" placeholder="Insira seu GitHub Token" 
-                        class="bg-slate-950 border border-slate-700 rounded-xl px-4 py-2 text-sm focus:ring-sky-500 outline-none w-full md:w-64">
+            <input type="password" id="gh-token" placeholder="GitHub Token" class="bg-slate-950 border border-slate-700 rounded-xl px-4 py-2 text-sm outline-none w-64">
+        </div>
+
+        <div class="glass rounded-[30px] p-8">
+            <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
+                <i data-lucide="layout" class="text-sky-400"></i> Conteúdo da Home
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-xs uppercase tracking-widest text-slate-500 mb-2">Título Principal</label>
+                    <input type="text" id="edit-home-title" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 outline-none focus:border-sky-500">
                 </div>
-                <textarea id="code-editor" readonly class="w-full h-96 bg-slate-950 font-mono text-sm border border-slate-800 rounded-3xl p-6 outline-none text-sky-200 mb-6" 
-                    placeholder="⚠️ Insira o Token para carregar o código..."></textarea>
-                <button onclick="saveChanges()" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-5 rounded-2xl transition flex items-center justify-center gap-3">
-                    <i data-lucide="save" class="w-6 h-6"></i> SALVAR NO GITHUB
-                </button>
+                <div>
+                    <label class="block text-xs uppercase tracking-widest text-slate-500 mb-2">Descrição</label>
+                    <input type="text" id="edit-home-desc" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 outline-none focus:border-sky-500">
+                </div>
             </div>
         </div>
-    </main>
 
-    <script src="app.js"></script>
-</body>
-</html>
+        <div class="glass rounded-[30px] p-8">
+            <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                <i data-lucide="file-json" class="text-amber-400"></i> Banco de Dados (config.json)
+            </h3>
+            <p class="text-sm text-slate-500 mb-4">Edite os links de download e imagens aqui.</p>
+            <textarea id="json-editor" readonly class="w-full h-80 bg-slate-950 font-mono text-xs border border-slate-800 rounded-2xl p-6 outline-none text-amber-200 mb-6" placeholder="Insira o Token para carregar o JSON..."></textarea>
+            
+            <button onclick="saveConfigJSON()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-4 rounded-xl transition flex items-center justify-center gap-3">
+                <i data-lucide="save" class="w-5 h-5"></i> SALVAR CONFIGURAÇÕES
+            </button>
+        </div>
+
+        <div class="glass rounded-[30px] p-8">
+            <h3 class="text-xl font-bold mb-4">Código Fonte (index.html)</h3>
+            <textarea id="code-editor" readonly class="w-full h-64 bg-slate-950 font-mono text-xs border border-slate-800 rounded-2xl p-6 outline-none text-sky-200 mb-6"></textarea>
+            <button onclick="saveIndexHTML()" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-4 rounded-xl transition flex items-center justify-center gap-3">
+                <i data-lucide="code" class="w-5 h-5"></i> ATUALIZAR ESTRUTURA DO SITE
+            </button>
+        </div>
+    </div>
+</main>
